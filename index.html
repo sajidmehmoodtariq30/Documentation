@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S. Project Ecosystem - Technical Documentation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            min-height: 100vh;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+            font-weight: 300;
+        }
+        
+        .header .version {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Content Styles */
+        .content {
+            padding: 3rem 2rem;
+        }
+        
+        .section {
+            margin-bottom: 3rem;
+            page-break-inside: avoid;
+        }
+        
+        .section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2a5298;
+            margin: 2rem 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .tech-item {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        
+        .tech-item strong {
+            color: #1e3c72;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .architecture-diagram {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            overflow-x: auto;
+            white-space: pre;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .step-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            float: left;
+            margin-right: 1rem;
+            margin-top: 0.2rem;
+        }
+        
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+        }
+        
+        code {
+            background: #f1f5f9;
+            color: #e53e3e;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            border: 1px solid #fc8181;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .success-box {
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+            border: 1px solid #68d391;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #bee3f8 0%, #90cdf4 100%);
+            border: 1px solid #63b3ed;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f8fafc;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                max-width: none;
+            }
+            .header::before {
+                display: none;
+            }
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin: 2rem 0;
+            padding-left: 60px;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 12px;
+            top: 8px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="version">v1.0 Technical Spec</div>
+            <h1>J.A.R.V.I.S.</h1>
+            <div class="subtitle">
+                Just A Rather Very Intelligent System<br>
+                Complete Project Ecosystem Documentation
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Project Vision -->
+            <div class="section">
+                <h2>🎯 Project Vision</h2>
+                <div class="highlight-box">
+                    <p><strong>Mission:</strong> To develop a local-first, intelligent, modular, and secure AI assistant inspired by Jarvis from Iron Man, capable of understanding natural voice input, learning user behavior over time, providing smart suggestions, supporting gesture-based screen control, and automating tasks through contextual memory and machine learning.</p>
+                </div>
+                
+                <p>This assistant will function as a <strong>personal operating layer</strong> over the OS — not just running commands, but anticipating them based on time, patterns, and user habits. The system represents a complete ecosystem of four interconnected projects working in harmony.</p>
+                
+                <div class="info-box">
+                    <strong>🔑 Key Philosophy:</strong> You are not building 4 projects. You are creating an ecosystem. Every tool reflects who you are as a developer, innovator, and system designer.
+                </div>
+            </div>
+
+            <!-- Architecture Overview -->
+            <div class="section">
+                <h2>🏗️ System Architecture</h2>
+                <div class="architecture-diagram">                   ┌────────────────────────────┐
+                   │      Always Listening      │
+                   │   (Hotword + Voice Match)  │
+                   └────────────┬───────────────┘
+                                │
+                      ┌────────▼─────────┐
+                      │ Speech-to-Text   │
+                      │   (Whisper)      │
+                      └────────┬─────────┘
+                                │
+                     ┌─────────▼──────────┐
+                     │   Intent Handler   │
+                     │(LLM + Personal DB) │
+                     └─────────┬──────────┘
+               ┌────────────┐  │  ┌──────────────┐
+               │ Task Exec  │◄─┘  │ Suggestions   │
+               └────────────┘     └─────┬────────┘
+                              ┌─────────▼────────────┐
+                              │    Gesture Module    │
+                              │ (MediaPipe + OpenCV) │
+                              └─────────┬────────────┘
+                                        │
+                            ┌──────────▼─────────────┐
+                            │ WiFi-based Device Ctrl │
+                            │  (Secured Local APIs)  │
+                            └────────────────────────┘</div>
+            </div>
+
+            <!-- Core Objectives -->
+            <div class="section">
+                <h2>🎯 Key Objectives</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">🎤</span>
+                        <h4>Voice Activation</h4>
+                        <p>Always-listening hotword detection tied to your personal voiceprint for secure activation.</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🧠</span>
+                        <h4>Local Intelligence</h4>
+                        <p>Use of local LLMs for context-rich responses via Ollama, ensuring privacy and speed.</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">📊</span>
+                        <h4>Learning System</h4>
+                        <p>Adaptive learning that understands your patterns and preferences over time.</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🖐️</span>
+                        <h4>Gesture Control</h4>
+                        <p>Non-verbal command handling through advanced computer vision.</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">💻</span>
+                        <h4>Cross-Platform</h4>
+                        <p>Ubuntu development with Windows support and WSL compatibility.</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🔐</span>
+                        <h4>Secure Control</h4>
+                        <p>Device-specific access control over WiFi for smart home automation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Ecosystem -->
+            <div class="section page-break">
+                <h2>🌐 Project Ecosystem Overview</h2>
+                <p>The JARVIS ecosystem consists of four interconnected core projects, each serving a specific purpose while sharing resources and capabilities:</p>
+                
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>SentinelDB - Intelligent Local Database</h3>
+                    <p><strong>Purpose:</strong> Custom lightweight database engine optimized for logging, memory persistence, and smart retrieval.</p>
+                    <ul>
+                        <li>Custom .sdb or .ndb format with append-only storage</li>
+                        <li>Time-series queryable logs with indexing</li>
+                        <li>Query Language: <code>FIND action WHERE context = "deployment"</code></li>
+                        <li>Optional file encryption with JSON and binary modes</li>
+                        <li>Integration-ready for Flask/FastAPI</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Cerebro Shell - Smart CLI + AI Interpreter</h3>
+                    <p><strong>Purpose:</strong> Natural language terminal assistant that converts intent into shell commands and workflows.</p>
+                    <ul>
+                        <li>Translate user intent into actionable CLI commands</li>
+                        <li>Support multiple command sets (Linux, Git, Vercel, Docker)</li>
+                        <li>Auto-generate files (vercel.json, .env, .gitignore, etc.)</li>
+                        <li>MERN scaffolder with habit detection</li>
+                        <li>AI-enhanced explanation capabilities</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Codexa IDE - Smart Developer Environment</h3>
+                    <p><strong>Purpose:</strong> Personal developer IDE that adapts to user habits and workflows.</p>
+                    <ul>
+                        <li>Monaco editor with comprehensive language support</li>
+                        <li>Side-by-side Git viewer and integrated terminal</li>
+                        <li>AI assistant for code explanation and completion</li>
+                        <li>SentinelDB integration for preference memory</li>
+                        <li>Plugin-ready architecture</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Jarvis Core - Main AI Assistant</h3>
+                    <p><strong>Purpose:</strong> Voice-controlled AI operating layer with multi-modal inputs and contextual intelligence.</p>
+                    <ul>
+                        <li>Wake word + voice authentication</li>
+                        <li>Whisper-based STT and LLM-based Intent Handler</li>
+                        <li>Gesture control and secure WiFi device control</li>
+                        <li>Learning Engine with behavioral pattern recognition</li>
+                        <li>Modular plugin system</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Technical Stack -->
+            <div class="section">
+                <h2>⚙️ Technical Stack</h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Layer</th>
+                                <th>Technology</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Backend</strong></td>
+                                <td>Python, FastAPI, Flask</td>
+                                <td>Core API services and data processing</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Frontend</strong></td>
+                                <td>React, Next.js, Tailwind, Shadcn, Monaco</td>
+                                <td>User interfaces and code editing</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AI/NLP</strong></td>
+                                <td>Whisper, Ollama, LangChain, Transformers</td>
+                                <td>Speech processing and language understanding</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Database</strong></td>
+                                <td>SentinelDB (custom), SQLite</td>
+                                <td>Data persistence and memory storage</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CLI</strong></td>
+                                <td>Python subprocess, Bash, WASM</td>
+                                <td>Command execution and system interaction</td>
+                            </tr>
+                            <tr>
+                                <td><strong>OS</strong></td>
+                                <td>Ubuntu (Primary), Windows (Compatible)</td>
+                                <td>Operating system support</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ML</strong></td>
+                                <td>Scikit-learn, MFCC, OpenCV, MediaPipe</td>
+                                <td>Machine learning and computer vision</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DevOps</strong></td>
+                                <td>Docker, GitHub Actions, Railway, Vercel</td>
+                                <td>Deployment and continuous integration</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Development Timeline -->
+            <div class="section page-break">
+                <h2>📅 Development Timeline</h2>
+                <div class="info-box">
+                    <strong>Note:</strong> Timeline is flexible. Priority is given to quality, integration, and low-latency execution.
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <h3>Phase 1: SentinelDB Foundation</h3>
+                        <ul>
+                            <li>Build custom query system</li>
+                            <li>Implement file format + encryption</li>
+                            <li>Create Python wrapper API</li>
+                            <li>Test with sample data and indexing</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <h3>Phase 2: Cerebro Shell Intelligence</h3>
+                        <ul>
+                            <li>Develop intent interpreter</li>
+                            <li>Build Vercel/MERN scaffolding system</li>
+                            <li>Implement command chaining + history</li>
+                            <li>Integrate with SentinelDB for memory</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <h3>Phase 3: Jarvis Core Development</h3>
+                        <ul>
+                            <li>Voice activation + STT + LLM integration</li>
+                            <li>Connect Cerebro Shell + SentinelDB</li>
+                            <li>Implement gesture control system</li>
+                            <li>Develop Device API for WiFi control</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <h3>Phase 4: Codexa IDE Completion</h3>
+                        <ul>
+                            <li>Set up Monaco editor environment</li>
+                            <li>Embed terminal + AI chat features</li>
+                            <li>Integrate user memory from SentinelDB</li>
+                            <li>Plugin system development</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Implementation Steps -->
+            <div class="section page-break">
+                <h2>🔧 Detailed Implementation Steps</h2>
+
+                <div class="step-card">
+                    <h3>Step 1: Core System Setup</h3>
+                    <ul>
+                        <li>Install <strong>Ubuntu 22.04 LTS</strong> as the base OS</li>
+                        <li>Set up Python 3.10+, Node.js for optional UI/automation</li>
+                        <li>Install package managers: <code>apt</code>, <code>pip</code>, <code>npm</code></li>
+                        <li>Set up virtual environment to isolate dependencies</li>
+                        <li>Install <strong>Docker</strong> for container-based LLMs</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3>Step 2: Voice Activation System</h3>
+                    <h4>🔸 Tools:</h4>
+                    <ul>
+                        <li><strong>Porcupine by Picovoice</strong> for offline hotword detection</li>
+                        <li><strong>Python voiceprint verification</strong> using MFCC features with <code>librosa</code> + SVM/KNN</li>
+                    </ul>
+                    <h4>🔸 Logic:</h4>
+                    <ul>
+                        <li>App continuously listens but only activates when:
+                            <ul>
+                                <li>Trigger phrase is detected (e.g., "Wake up buddy, daddy's home")</li>
+                                <li>Voice matches registered profile for privacy</li>
+                            </ul>
+                        </li>
+                        <li>Non-matching voices or incorrect phrases result in no activation</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3>Step 3: Speech-to-Text Implementation</h3>
+                    <h4>🔸 Tools:</h4>
+                    <ul>
+                        <li><strong>Whisper (base/small model)</strong> or <code>faster-whisper</code> for efficiency</li>
+                    </ul>
+                    <h4>🔸 Function:</h4>
+                    <ul>
+                        <li>Converts spoken input into text</li>
+                        <li>Stores transcription in memory/log for analysis</li>
+                        <li>Handles background noise detection with repetition requests</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3>Step 4: Intent Processing via LLM</h3>
+                    <h4>🔸 Tools:</h4>
+                    <ul>
+                        <li><strong>Ollama</strong> for locally running LLM management</li>
+                        <li>LLMs: LLaMA 3, Mistral, or Phi-3 for fast response</li>
+                        <li><strong>LangChain</strong> for context handling and memory injection</li>
+                    </ul>
+                    <h4>🔸 Logic:</h4>
+                    <ul>
+                        <li>Input text passed to LLM with contextual history:
+                            <ul>
+                                <li>Current time and date</li>
+                                <li>Recent user actions</li>
+                                <li>Behavioral patterns (e.g., "user usually opens VSCode at 9 PM")</li>
+                            </ul>
+                        </li>
+                        <li>LLM responds with:
+                            <ul>
+                                <li>Clarifying questions</li>
+                                <li>Command interpretation</li>
+                                <li>Smart suggestions (e.g., "Shall I integrate Shadcn UI too?")</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3>Step 5: Personalized Habit Learning Engine</h3>
+                    <h4>🔸 Data Storage:</h4>
+                    <ul>
+                        <li>Use <strong>SQLite</strong> or <strong>ChromaDB</strong> for memory storage</li>
+                        <li>Track repeated commands, preferences, and temporal patterns</li>
+                    </ul>
+                    <h4>🔸 ML Component:</h4>
+                    <ul>
+                        <li>Use <strong>Scikit-learn</strong> for:
+                            <ul>
+                                <li>Habit classification and detection</li>
+                                <li>Anomaly detection for unusual behavior</li>
+                            </ul>
+                        </li>
+                        <li>Apply scoring to predict user's next likely actions</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3>Step 6: Task Automation & Execution</h3>
+                    <h4>🔸 Scope:</h4>
+                    <ul>
+                        <li>Automate development environment setup</li>
+                        <li>Project scaffolding (<code>npx create-react-app</code>, <code>tailwindcss init</code>, <code>git init</code>)</li>
+                        <li>Application launches (VSCode, Chrome, Terminal)</li>
+                        <li>Execute OS commands using <code>subprocess</code> with Linux/Windows compatibility</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3>Step 7: Gesture Control System</h3>
+                    <h4>🔸 Tools:</h4>
+                    <ul>
+                        <li><strong>MediaPipe Hands</strong> + <strong>OpenCV</strong></li>
+                        <li>Optional: Leap Motion SDK for advanced control</li>
+                    </ul>
+                    <h4>🔸 Features:</h4>
+                    <ul>
+                        <li>Gesture recognition:
+                            <ul>
+                                <li>Open palm = pause</li>
+                                <li>Two fingers = scroll</li>
+                                <li>Swipe = switch windows</li>
+                                <li>Custom gestures (e.g., 'L' = launch browser)</li>
+                            </ul>
+                        </li>
+                        <li>Map gestures to keyboard/mouse events using 
