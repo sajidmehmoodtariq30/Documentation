@@ -51,12 +51,12 @@ const MainContent = ({ currentSection, darkMode }) => {
             <span className="mr-3">🧠</span>
             CORTEX AI Assistant
           </h3>          <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            Advanced AI assistant for code generation, debugging, and optimization. Features natural language processing, 
-            context-aware suggestions, and integration with multiple programming languages. Includes intelligent query routing 
-            that distinguishes between system-specific commands (handled locally) and general programming questions (routed to external AI).
-          </p><div className="space-y-2">
-            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-              <strong>Key Features:</strong> NLP, Code Generation, Debug Analysis
+            The central command hub and intelligence engine of the entire ecosystem. CORTEX AI handles ALL user input 
+            (voice, gesture, keyboard) and serves as the task delegation center, never executing tasks directly but 
+            understanding intent and routing commands to specialized components. Features natural language processing,
+            context-aware orchestration, and intelligent query routing.
+          </p><div className="space-y-2">            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <strong>Key Features:</strong> Command Hub, Task Delegation, Multi-Modal Input
             </div>
           </div>
         </div>
@@ -91,12 +91,11 @@ const MainContent = ({ currentSection, darkMode }) => {
             <span className="mr-3">💭</span>
             Cerebro Shell
           </h3>          <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            Next-generation command-line interface with AI-powered command suggestions, 
-            intelligent tab completion, and contextual help systems. Automatically adapts 
-            command syntax and suggestions based on detected shell environment and OS platform.
-          </p><div className="space-y-2">
-            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-              <strong>Key Features:</strong> AI Commands, Smart Completion, Context Help
+            Specialized command execution engine that receives delegated tasks from CORTEX AI and provides 
+            traditional keyboard-based terminal interaction. Focuses purely on efficient command execution 
+            without complex input systems, since CORTEX handles all advanced input methods (voice, gesture).
+          </p><div className="space-y-2">            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <strong>Key Features:</strong> Command Execution, CORTEX Integration, Terminal Efficiency
             </div>
           </div>
         </div>
@@ -110,13 +109,12 @@ const MainContent = ({ currentSection, darkMode }) => {
             <span className="mr-3">💻</span>
             Codexa IDE
           </h3>          <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            Modern integrated development environment with AI-assisted coding, 
-            collaborative features, and seamless integration with the entire ecosystem. 
-            Features intelligent environment detection for optimal performance and platform-specific optimizations.
+            AI-powered development environment that receives coding tasks delegated from CORTEX AI and provides 
+            pure keyboard-based development workflows. Seamlessly integrates with the entire ecosystem while 
+            focusing on clean, efficient code editing without complex input handling.
           </p>
-          <div className="space-y-2">
-            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-              <strong>Key Features:</strong> AI Coding, Collaboration, Ecosystem Integration
+          <div className="space-y-2">            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <strong>Key Features:</strong> AI-Assisted Coding, CORTEX Integration, Streamlined Workflows
             </div>
           </div>
         </div>
@@ -136,38 +134,38 @@ const MainContent = ({ currentSection, darkMode }) => {
           {/* CORTEX AI Deep Dive */}
           <div className={`p-6 rounded-lg ${
             darkMode ? 'bg-gradient-to-r from-blue-900 to-purple-900' : 'bg-gradient-to-r from-blue-50 to-purple-50'
-          }`}>
-            <h4 className={`text-xl font-bold mb-4 flex items-center ${
+          }`}>            <h4 className={`text-xl font-bold mb-4 flex items-center ${
               darkMode ? 'text-white' : 'text-gray-900'
             }`}>
               <span className="mr-3">🧠</span>
-              CORTEX AI - The Intelligence Core
+              CORTEX AI - The Central Command Hub
             </h4>
             <p className={`mb-6 ${darkMode ? 'text-blue-100' : 'text-blue-800'}`}>
-              CORTEX AI serves as the central intelligence hub, providing advanced natural language processing, 
-              code generation, and contextual understanding capabilities that power the entire ecosystem.
+              CORTEX AI serves as the unified intelligence and command center of the entire ecosystem, handling ALL user input 
+              methods (voice, gesture, keyboard) and intelligently delegating tasks to specialized components. It acts as the 
+              orchestrator, never executing tasks directly but understanding intent and routing commands to the appropriate ecosystem members.
             </p>
             
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
+            <div className="grid md:grid-cols-2 gap-6">              <div>
                 <h5 className={`font-bold mb-3 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
-                  Core Capabilities
+                  Central Command Capabilities
                 </h5>
                 <ul className={`space-y-2 ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
                   <li className="flex items-start">
                     <span className="text-yellow-500 mr-2 mt-1">●</span>
-                    <span><strong>Natural Language Understanding:</strong> Processes developer intent from conversational input, converting ideas into actionable code</span>
+                    <span><strong>Unified Input Processing:</strong> Handles voice commands, gesture controls, and keyboard input through a single intelligent interface</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-yellow-500 mr-2 mt-1">●</span>
-                    <span><strong>Code Generation & Analysis:</strong> Generates, reviews, and optimizes code across multiple programming languages with contextual awareness</span>
+                    <span><strong>Intent Recognition & Routing:</strong> Understands user intent and delegates tasks to appropriate ecosystem components</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-yellow-500 mr-2 mt-1">●</span>
-                    <span><strong>Intelligent Debugging:</strong> Identifies bugs, suggests fixes, and explains complex error scenarios in plain language</span>
-                  </li>                  <li className="flex items-start">
+                    <span><strong>Context-Aware Orchestration:</strong> Maintains ecosystem state and coordinates multi-component workflows</span>
+                  </li>
+                  <li className="flex items-start">
                     <span className="text-yellow-500 mr-2 mt-1">●</span>
-                    <span><strong>Learning & Adaptation:</strong> Continuously learns from user patterns to provide increasingly personalized assistance while maintaining complete data privacy</span>
+                    <span><strong>Event-Driven Response:</strong> Reacts to ecosystem events (time triggers, system notifications) and initiates appropriate actions</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-yellow-500 mr-2 mt-1">●</span>
@@ -175,30 +173,260 @@ const MainContent = ({ currentSection, darkMode }) => {
                   </li>
                 </ul>
               </div>
-              
-              <div>
+                <div>
                 <h5 className={`font-bold mb-3 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
-                  Technical Implementation
+                  Command Hub Architecture
                 </h5>
                 <ul className={`space-y-2 ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">●</span>
-                    <span><strong>Local LLM Integration:</strong> Utilizes Ollama with LLaMA 3/Mistral for privacy-focused AI processing</span>
+                    <span><strong>Multi-Modal Input Layer:</strong> Unified processing for voice (Whisper STT), gesture (MediaPipe), and keyboard input</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">●</span>
-                    <span><strong>Voice Processing Pipeline:</strong> Porcupine hotword detection + Whisper STT for hands-free interaction</span>
+                    <span><strong>Intent Classification Engine:</strong> LLaMA 3/Mistral models for understanding user intent and command routing</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">●</span>
-                    <span><strong>Context Memory System:</strong> SQLite/ChromaDB for persistent user preferences and project context</span>
+                    <span><strong>Component Communication Hub:</strong> API orchestration layer for delegating tasks to Cerebro Shell, Codexa IDE, and SentinelDB</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">●</span>
-                    <span><strong>Security Framework:</strong> Voiceprint verification and local-only processing for maximum privacy</span>
+                    <span><strong>Event-Driven Coordination:</strong> Handles system events, time-based triggers, and cross-component workflow management</span>
                   </li>
                 </ul>
+              </div>            </div>
+          </div>
+
+          {/* Central Command Hub Architecture */}
+          <div className={`p-6 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-indigo-900 to-cyan-900' : 'bg-gradient-to-r from-indigo-50 to-cyan-50'
+          }`}>
+            <h4 className={`text-xl font-bold mb-4 flex items-center ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              <span className="mr-3">🎛️</span>
+              Unified Command & Control Architecture
+            </h4>
+            <p className={`mb-6 ${darkMode ? 'text-indigo-100' : 'text-indigo-800'}`}>
+              Revolutionary architecture where CORTEX AI serves as the single point of interaction, eliminating redundant input systems 
+              across components and creating a truly unified, intelligent command experience.
+            </p>
+            
+            <div className="space-y-6">
+              {/* Input Consolidation */}
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h5 className={`font-bold mb-3 ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                  🎤 Unified Input Layer - No Redundancy
+                </h5>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className={`p-3 rounded-lg ${
+                    darkMode ? 'bg-cyan-900 bg-opacity-30' : 'bg-cyan-100'
+                  }`}>
+                    <h6 className={`font-bold text-sm ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                      🗣️ Voice Commands
+                    </h6>
+                    <p className={`text-xs mt-1 ${darkMode ? 'text-cyan-100' : 'text-cyan-700'}`}>
+                      "Open project folder" → CORTEX → Delegates to Cerebro Shell
+                    </p>
+                  </div>
+                  
+                  <div className={`p-3 rounded-lg ${
+                    darkMode ? 'bg-cyan-900 bg-opacity-30' : 'bg-cyan-100'
+                  }`}>
+                    <h6 className={`font-bold text-sm ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                      👋 Gesture Controls
+                    </h6>
+                    <p className={`text-xs mt-1 ${darkMode ? 'text-cyan-100' : 'text-cyan-700'}`}>
+                      Hand gesture → CORTEX → Routes to appropriate component
+                    </p>
+                  </div>
+                  
+                  <div className={`p-3 rounded-lg ${
+                    darkMode ? 'bg-cyan-900 bg-opacity-30' : 'bg-cyan-100'
+                  }`}>
+                    <h6 className={`font-bold text-sm ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                      ⌨️ Keyboard Input
+                    </h6>
+                    <p className={`text-xs mt-1 ${darkMode ? 'text-cyan-100' : 'text-cyan-700'}`}>
+                      Natural language text → CORTEX → Executes via target component
+                    </p>
+                  </div>
+                </div>
               </div>
+              
+              {/* Command Flow Architecture */}
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h5 className={`font-bold mb-3 ${darkMode ? 'text-indigo-200' : 'text-indigo-800'}`}>
+                  🔄 Intelligent Command Flow
+                </h5>
+                <div className={`p-3 rounded-lg mb-4 ${
+                  darkMode ? 'bg-gray-900 border border-gray-700' : 'bg-gray-50 border border-gray-200'
+                }`}>
+                  <pre className={`text-xs overflow-x-auto ${darkMode ? 'text-green-400' : 'text-gray-800'}`}>
+{`┌─────────────────┐    ┌──────────────────┐    ┌─────────────────────┐
+│ User Input      │───▶│ CORTEX AI        │───▶│ Target Component    │
+│ (Voice/Gesture/ │    │ • Intent Analysis│    │ • Cerebro Shell     │
+│  Keyboard)      │    │ • Context Aware  │    │ • Codexa IDE        │
+│                 │    │ • Route Decision │    │ • SentinelDB        │
+└─────────────────┘    └──────────────────┘    └─────────────────────┘
+                                │
+                                ▼
+                       ┌──────────────────┐
+                       │ Event Triggers   │
+                       │ • Time-based     │
+                       │ • System Events  │
+                       │ • Cross-component│
+                       └──────────────────┘`}
+                  </pre>
+                </div>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <h6 className={`font-bold text-sm mb-2 ${darkMode ? 'text-indigo-200' : 'text-indigo-800'}`}>
+                      📝 CORTEX Never Executes Directly
+                    </h6>
+                    <ul className={`text-xs space-y-1 ${darkMode ? 'text-indigo-100' : 'text-indigo-700'}`}>
+                      <li>• Analyzes user intent and context</li>
+                      <li>• Determines the best component for the task</li>
+                      <li>• Delegates execution to specialized components</li>
+                      <li>• Monitors completion and provides feedback</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h6 className={`font-bold text-sm mb-2 ${darkMode ? 'text-indigo-200' : 'text-indigo-800'}`}>
+                      🎯 Smart Task Delegation Examples
+                    </h6>
+                    <ul className={`text-xs space-y-1 ${darkMode ? 'text-indigo-100' : 'text-indigo-700'}`}>
+                      <li>• "Open folder" → Cerebro Shell</li>
+                      <li>• "Debug this code" → Codexa IDE</li>
+                      <li>• "Show database stats" → SentinelDB</li>
+                      <li>• "It's 24:00, cleanup time" → Automated workflow</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Event-Driven Coordination */}
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h5 className={`font-bold mb-3 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                  ⏰ Event-Driven Ecosystem Coordination
+                </h5>
+                <div className="grid md:grid-cols-3 gap-3">
+                  <div className={`p-3 rounded-lg ${
+                    darkMode ? 'bg-purple-900 bg-opacity-30' : 'bg-purple-100'
+                  }`}>
+                    <h6 className={`font-bold text-sm ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                      🕛 Time-Based Events
+                    </h6>
+                    <p className={`text-xs mt-1 ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                      SentinelDB: "24:00 reached" → CORTEX: "Start cleanup routine" → Delegates cleanup tasks
+                    </p>
+                  </div>
+                  
+                  <div className={`p-3 rounded-lg ${
+                    darkMode ? 'bg-purple-900 bg-opacity-30' : 'bg-purple-100'
+                  }`}>
+                    <h6 className={`font-bold text-sm ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                      🔔 System Events
+                    </h6>
+                    <p className={`text-xs mt-1 ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                      "Low disk space" → CORTEX: "Optimize storage" → Coordinates cleanup across components
+                    </p>
+                  </div>
+                  
+                  <div className={`p-3 rounded-lg ${
+                    darkMode ? 'bg-purple-900 bg-opacity-30' : 'bg-purple-100'
+                  }`}>
+                    <h6 className={`font-bold text-sm ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                      🔗 Cross-Component Events
+                    </h6>
+                    <p className={`text-xs mt-1 ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                      "Code compiled" → CORTEX: "Run tests" → Orchestrates testing workflow
+                    </p>
+                  </div>
+                </div>
+              </div>            </div>
+          </div>
+
+          {/* Architectural Benefits */}
+          <div className={`p-6 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-emerald-900 to-cyan-900' : 'bg-gradient-to-r from-emerald-50 to-cyan-50'
+          }`}>
+            <h4 className={`text-xl font-bold mb-4 flex items-center ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              <span className="mr-3">✨</span>
+              Revolutionary Architecture Benefits
+            </h4>
+            <p className={`mb-6 ${darkMode ? 'text-emerald-100' : 'text-emerald-800'}`}>
+              By centralizing ALL input processing in CORTEX AI, we eliminate redundant systems and create a more elegant, 
+              efficient, and maintainable ecosystem architecture.
+            </p>
+            
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h5 className={`font-bold mb-3 ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                  🎯 Simplified Component Design
+                </h5>
+                <ul className={`text-sm space-y-2 ${darkMode ? 'text-emerald-100' : 'text-emerald-700'}`}>
+                  <li>• <strong>Cerebro Shell:</strong> Only needs keyboard input handling</li>
+                  <li>• <strong>Codexa IDE:</strong> Focuses purely on code editing workflows</li>
+                  <li>• <strong>SentinelDB:</strong> Pure data management, no input complexity</li>
+                  <li>• <strong>Reduced codebase complexity</strong> across all components</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h5 className={`font-bold mb-3 ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                  🚀 Performance & Efficiency
+                </h5>
+                <ul className={`text-sm space-y-2 ${darkMode ? 'text-emerald-100' : 'text-emerald-700'}`}>
+                  <li>• <strong>Single voice processing engine</strong> instead of 4 separate systems</li>
+                  <li>• <strong>Centralized gesture recognition</strong> reduces computational overhead</li>
+                  <li>• <strong>Unified context awareness</strong> eliminates duplicate processing</li>
+                  <li>• <strong>Optimal resource utilization</strong> across the ecosystem</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h5 className={`font-bold mb-3 ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                  🛠️ Development & Maintenance
+                </h5>
+                <ul className={`text-sm space-y-2 ${darkMode ? 'text-emerald-100' : 'text-emerald-700'}`}>
+                  <li>• <strong>Single point of input logic</strong> for easier debugging</li>
+                  <li>• <strong>Centralized security model</strong> for all user interactions</li>
+                  <li>• <strong>Simplified testing</strong> - test input once, not per component</li>
+                  <li>• <strong>Consistent user experience</strong> across all tools</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className={`mt-6 p-4 rounded-lg ${
+              darkMode ? 'bg-gradient-to-r from-green-800 to-blue-800' : 'bg-gradient-to-r from-green-100 to-blue-100'
+            }`}>
+              <h5 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                💡 The "Always Available CORTEX" Principle
+              </h5>
+              <p className={`text-sm ${darkMode ? 'text-green-100' : 'text-green-800'}`}>
+                Since CORTEX AI is always running and always available, there's no need for Cerebro Shell or Codexa IDE 
+                to implement complex input systems. Users can simply speak or gesture anywhere in the ecosystem, and CORTEX 
+                will understand the context and delegate the task to the appropriate component. This creates a truly seamless, 
+                intelligent development experience while keeping individual components focused and efficient.
+              </p>
             </div>
           </div>
 
@@ -323,30 +551,28 @@ const MainContent = ({ currentSection, darkMode }) => {
             }`}>
               <span className="mr-3">💭</span>
               Cerebro Shell - The Intelligent Terminal
-            </h4>
-            <p className={`mb-6 ${darkMode ? 'text-purple-100' : 'text-purple-800'}`}>
-              Cerebro Shell transforms the traditional command-line interface into an intelligent, 
-              context-aware terminal that understands natural language and provides AI-powered assistance for all system operations.
+            </h4>            <p className={`mb-6 ${darkMode ? 'text-purple-100' : 'text-purple-800'}`}>
+              Cerebro Shell serves as the ecosystem's specialized command execution engine, receiving delegated tasks from CORTEX AI 
+              and providing traditional keyboard-based terminal interaction. Since CORTEX AI handles ALL advanced input methods 
+              (voice, gesture), Cerebro Shell only needs to support keyboard input, making it elegantly simple and highly efficient.
             </p>
             
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
+            <div className="grid md:grid-cols-2 gap-6">              <div>
                 <h5 className={`font-bold mb-3 ${darkMode ? 'text-pink-200' : 'text-pink-800'}`}>
-                  Revolutionary Features
+                  Specialized Execution Features
                 </h5>
                 <ul className={`space-y-2 ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
                   <li className="flex items-start">
                     <span className="text-yellow-500 mr-2 mt-1">●</span>
-                    <span><strong>Natural Language Commands:</strong> Execute complex system operations using plain English instructions</span>
+                    <span><strong>CORTEX Command Execution:</strong> Receives and executes delegated commands from CORTEX AI with full context awareness</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-yellow-500 mr-2 mt-1">●</span>
-                    <span><strong>Gesture Control Integration:</strong> MediaPipe-powered hand gesture recognition for touchless terminal control</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-yellow-500 mr-2 mt-1">●</span>
-                    <span><strong>Contextual Auto-completion:</strong> AI-powered command suggestions based on current directory, git status, and project context</span>
+                    <span><strong>Traditional Terminal Interface:</strong> Provides standard keyboard-based command-line interaction for direct user input</span>
                   </li>                  <li className="flex items-start">
+                    <span className="text-yellow-500 mr-2 mt-1">●</span>
+                    <span><strong>Keyboard-Only Design:</strong> Simplified architecture since voice/gesture processing is handled exclusively by CORTEX AI</span>
+                  </li><li className="flex items-start">
                     <span className="text-yellow-500 mr-2 mt-1">●</span>
                     <span><strong>Smart Command History:</strong> Intelligent command search and pattern recognition for workflow optimization</span>
                   </li>
@@ -392,10 +618,10 @@ const MainContent = ({ currentSection, darkMode }) => {
             }`}>
               <span className="mr-3">💻</span>
               Codexa IDE - The Future of Development
-            </h4>
-            <p className={`mb-6 ${darkMode ? 'text-indigo-100' : 'text-indigo-800'}`}>
+            </h4>            <p className={`mb-6 ${darkMode ? 'text-indigo-100' : 'text-indigo-800'}`}>
               Codexa IDE redefines the development experience by seamlessly integrating all ecosystem components 
-              into a unified, AI-powered development environment that anticipates developer needs and streamlines workflows.
+              into a unified, AI-powered development environment. With CORTEX AI handling all advanced input methods,
+              Codexa IDE focuses purely on keyboard-based development workflows, providing a clean, efficient coding experience.
             </p>
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -417,7 +643,7 @@ const MainContent = ({ currentSection, darkMode }) => {
                     <span><strong>Integrated Ecosystem Access:</strong> Direct access to CORTEX AI, SentinelDB, and Cerebro Shell within the IDE interface</span>
                   </li>                  <li className="flex items-start">
                     <span className="text-cyan-500 mr-2 mt-1">●</span>
-                    <span><strong>Visual Development Tools:</strong> Drag-and-drop interface builders with automatic code generation</span>
+                    <span><strong>Streamlined Input Architecture:</strong> Focuses on pure coding efficiency with keyboard input only - voice/gesture handled by CORTEX AI</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-cyan-500 mr-2 mt-1">●</span>
@@ -556,8 +782,7 @@ const MainContent = ({ currentSection, darkMode }) => {
                   Provides recommendations in Codexa IDE → 
                   Cerebro Shell can apply database optimizations to external databases if authorized
                 </p>
-              </div>
-                <div className={`p-4 rounded-lg ${
+              </div>                <div className={`p-4 rounded-lg ${
                 darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
               }`}>
                 <h5 className={`font-bold mb-2 ${darkMode ? 'text-blue-200' : 'text-blue-800'}`}>
@@ -568,6 +793,129 @@ const MainContent = ({ currentSection, darkMode }) => {
                   CORTEX analyzes code patterns from SentinelDB and suggests fixes → 
                   SentinelDB provides related external database connection logs if relevant → 
                   Cerebro Shell runs diagnostic commands and applies fixes to external systems when authorized
+                </p>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h5 className={`font-bold mb-2 ${darkMode ? 'text-green-200' : 'text-green-800'}`}>
+                  🎯 Scenario 4: Voice-Driven Development (Streamlined Architecture)
+                </h5>
+                <p className={`text-sm ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
+                  <strong>Voice:</strong> "Open the project folder in terminal" → 
+                  <strong>CORTEX:</strong> Understands intent + context → 
+                  <strong>Cerebro Shell:</strong> Executes "cd /path/to/project" → 
+                  <strong>Result:</strong> Terminal opens in correct directory. No redundant voice processing in Cerebro Shell!
+                </p>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h5 className={`font-bold mb-2 ${darkMode ? 'text-yellow-200' : 'text-yellow-800'}`}>
+                  🎯 Scenario 5: Time-Based Automation
+                </h5>
+                <p className={`text-sm ${darkMode ? 'text-yellow-100' : 'text-yellow-700'}`}>
+                  <strong>24:00 Clock Event:</strong> SentinelDB triggers "Daily cleanup time" → 
+                  <strong>CORTEX:</strong> "Initiate cleanup workflow" → 
+                  <strong>Delegates:</strong> Cerebro Shell clears temp files, Codexa IDE saves open work, SentinelDB archives old logs → 
+                  <strong>Result:</strong> Coordinated system maintenance without user intervention
+                </p>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h5 className={`font-bold mb-2 ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                  🎯 Scenario 6: Gesture-Driven Code Navigation
+                </h5>
+                <p className={`text-sm ${darkMode ? 'text-cyan-100' : 'text-cyan-700'}`}>
+                  <strong>Hand Gesture:</strong> Point to code + "Find usage" gesture → 
+                  <strong>CORTEX:</strong> Recognizes gesture + analyzes screen context → 
+                  <strong>Codexa IDE:</strong> Highlights all references to selected function → 
+                  <strong>Benefit:</strong> Gesture recognition happens once in CORTEX, not duplicated in IDE
+                </p>
+              </div>
+            </div>          </div>
+
+          {/* Architecture Philosophy */}
+          <div className={`p-6 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-orange-900 to-red-900' : 'bg-gradient-to-r from-orange-50 to-red-50'
+          }`}>
+            <h4 className={`text-xl font-bold mb-4 flex items-center ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              <span className="mr-3">🎭</span>
+              Architecture Philosophy: "Why CORTEX as Single Input Point?"
+            </h4>
+            
+            <div className="space-y-6">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h5 className={`font-bold mb-3 ${darkMode ? 'text-orange-200' : 'text-orange-800'}`}>
+                  🤔 The Problem with Traditional Approach
+                </h5>
+                <p className={`text-sm mb-3 ${darkMode ? 'text-orange-100' : 'text-orange-700'}`}>
+                  Traditional development tools create redundancy by implementing voice recognition, gesture processing, 
+                  and AI assistance in every component. This leads to:
+                </p>
+                <ul className={`text-sm space-y-1 ${darkMode ? 'text-orange-100' : 'text-orange-700'}`}>
+                  <li>• <strong>Resource Waste:</strong> 4 separate voice processing engines running simultaneously</li>
+                  <li>• <strong>Inconsistent Experience:</strong> Different input behaviors across tools</li>
+                  <li>• <strong>Complex Maintenance:</strong> Bug fixes needed in multiple components</li>
+                  <li>• <strong>Context Loss:</strong> Each tool processes commands in isolation</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h5 className={`font-bold mb-3 ${darkMode ? 'text-red-200' : 'text-red-800'}`}>
+                  💡 The CORTEX Solution: "Always Available, Always Listening"
+                </h5>
+                <p className={`text-sm mb-3 ${darkMode ? 'text-red-100' : 'text-red-700'}`}>
+                  Since CORTEX AI is always running in the background and always available to the user, 
+                  why complicate other components with advanced input systems?
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <h6 className={`font-bold text-sm mb-2 ${darkMode ? 'text-red-200' : 'text-red-800'}`}>
+                      🎯 Core Insight
+                    </h6>
+                    <ul className={`text-xs space-y-1 ${darkMode ? 'text-red-100' : 'text-red-700'}`}>
+                      <li>• User can always say "Open folder in terminal"</li>
+                      <li>• CORTEX understands context + intent</li>
+                      <li>• CORTEX delegates to Cerebro Shell</li>
+                      <li>• Shell executes without input complexity</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h6 className={`font-bold text-sm mb-2 ${darkMode ? 'text-red-200' : 'text-red-800'}`}>
+                      ⚡ Result
+                    </h6>
+                    <ul className={`text-xs space-y-1 ${darkMode ? 'text-red-100' : 'text-red-700'}`}>
+                      <li>• <strong>1</strong> voice engine instead of <strong>4</strong></li>
+                      <li>• <strong>Unified</strong> experience across all tools</li>
+                      <li>• <strong>Specialized</strong> components do what they do best</li>
+                      <li>• <strong>Elegant</strong> and maintainable architecture</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-gradient-to-r from-green-800 to-blue-800' : 'bg-gradient-to-r from-green-100 to-blue-100'
+              }`}>
+                <h5 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  🏆 The Architectural Win
+                </h5>
+                <p className={`text-sm ${darkMode ? 'text-green-100' : 'text-green-800'}`}>
+                  <strong>"Each component does ONE thing exceptionally well."</strong> CORTEX handles input intelligence, 
+                  Cerebro Shell handles command execution, Codexa IDE handles code editing, and SentinelDB handles data management. 
+                  No redundancy, no complexity, just elegant specialization with seamless coordination.
                 </p>
               </div>
             </div>
