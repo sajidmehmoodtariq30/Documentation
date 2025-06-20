@@ -1,7 +1,6 @@
 import React from 'react'
 
-const Sidebar = ({ currentSection, setCurrentSection, darkMode }) => {
-  const sections = [
+const Sidebar = ({ currentSection, setCurrentSection, darkMode }) => {  const sections = [
     {
       id: 'overview',
       title: 'Overview & Integration',
@@ -15,16 +14,16 @@ const Sidebar = ({ currentSection, setCurrentSection, darkMode }) => {
       description: 'Technical architecture and specifications'
     },
     {
-      id: 'implementation-1',
-      title: 'Implementation (Steps 1-6)',
-      icon: '🚀',
-      description: 'Initial setup and core development'
+      id: 'implementation',
+      title: 'Implementation Guide',
+      icon: '⚙️',
+      description: 'Technology stack and implementation details'
     },
     {
-      id: 'implementation-2',
-      title: 'Implementation (Steps 7-11)',
-      icon: '⚡',
-      description: 'Advanced features and integration'
+      id: 'diagrams',
+      title: 'System Diagrams',
+      icon: '📊',
+      description: 'Visual architecture and data flow diagrams'
     },
     {
       id: 'testing',
@@ -165,14 +164,13 @@ const Sidebar = ({ currentSection, setCurrentSection, darkMode }) => {
             </div>
             <div className={`w-full h-2 rounded-full ${
               darkMode ? 'bg-gray-700' : 'bg-gray-200'
-            }`}>
-              <div 
+            }`}>              <div 
                 className="h-2 bg-gradient-to-r from-blue-500 to-green-500 rounded-full transition-all duration-300"
-                style={{ width: '35%' }}
+                style={{ width: '80%' }}
               ></div>
             </div>
             <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              35% Complete
+              80% Complete
             </div>
           </div>
         </div>

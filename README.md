@@ -1,242 +1,130 @@
-# CORTEX AI Ecosystem - Complete Technical Documentation
+# AI Development Ecosystem Documentation
 
-![CORTEX Logo](https://via.placeholder.com/600x200/1e3c72/white?text=CORTEX+AI+Ecosystem)
+A comprehensive, modern documentation website for the AI Development Ecosystem featuring CORTEX AI, SentinelDB, Cerebro Shell, and Codexa IDE.
 
-## 🎯 Project Overview
+## Features
 
-**CORTEX** (Cognitive Operations & Reasoning Technology EXpert) is a comprehensive, privacy-first AI assistant ecosystem designed specifically for developers and students. The system features four tightly integrated components that work together to provide an intelligent, voice-controlled development environment.
+### 🔍 **Advanced Search Functionality**
 
-### 🚀 Key Features
+- Real-time search across all documentation sections
+- Intelligent keyword matching with relevance scoring
+- Click-to-navigate search results
+- Clear search with X button
+- Mobile-responsive search interface
 
-- **🔐 Privacy-First**: All AI processing happens locally - no data leaves your machine
-- **🎤 Voice Control**: Natural language commands with "Hey CORTEX" activation
-- **👋 Gesture Recognition**: Hand gesture control using computer vision
-- **🧠 Learning AI**: Adapts to your coding patterns and preferences
-- **📚 Educational Focus**: Built-in learning paths and skill development tracking
-- **⚡ Hardware Optimized**: Specifically tuned for common developer hardware (i7-1355U, 8-16GB RAM)
+### 📄 **Export Functionality**
 
-## 🏗️ System Architecture
+- **Export as PDF**: Print-friendly version for offline reading
+- **Export as Markdown**: Structured markdown file for developers
+- Easy-to-use export menu in the header
+- Maintains formatting and structure
 
-The CORTEX ecosystem consists of four core components:
+### 🎨 **Modern UI/UX**
 
-### 1. **SentinelDB** - Secure Vector Database
+- Dark/Light theme toggle
+- Responsive design for all devices
+- Smooth animations and transitions
+- Professional gradient design
+- Student-friendly interface
 
-- Encrypted local storage for all user data
-- Vector embeddings for semantic search
-- Real-time data synchronization
-- Backup and recovery systems
+### 📚 **Comprehensive Documentation**
 
-### 2. **Cerebro Shell** - Voice & Command Interface
+- **Overview & Integration**: Complete ecosystem overview
+- **Architecture & Specifications**: Technical architecture details
+- **Implementation Guide**: Free technologies and tools for students
+- **System Diagrams**: Visual architecture representations
+- **Testing & Deployment**: QA and deployment strategies
+- **Roadmap**: Future features and development timeline
 
-- Voice recognition and processing
-- Natural language understanding
-- Gesture recognition via MediaPipe
-- Command routing and execution
+### 🔧 **Free Technology Stack**
 
-### 3. **CORTEX Core** - AI Processing Engine
+All recommended technologies are completely free for students:
 
-- Local LLM inference (LLaMA 3, CodeLLaMA)
-- Context management and memory
-- Intent classification and response generation
-- Learning and adaptation algorithms
+- **AI/ML**: Ollama, Whisper, MediaPipe, Transformers.js
+- **Backend**: Python, FastAPI, SQLite, PostgreSQL
+- **Frontend**: React, Tailwind CSS, Vite, Electron
+- **Development**: VS Code, Git, Node.js, TypeScript
 
-### 4. **Codexa IDE** - Integrated Development Environment
+## Getting Started
 
-- AI-powered code completion
-- Real-time code analysis
-- Collaborative features
-- Multi-language support
-
-## 📚 Documentation Structure
-
-This comprehensive documentation is now available as a modern, interactive single-page application.
-
-### 🌟 Main Documentation
-
-**[Open Documentation](index.html)** - Interactive documentation system with:
-
-- **📋 Overview & Vision** - Project objectives, learning roadmap, and team structure
-- **🏗️ System Architecture** - Technical design, components, and data flow
-- **⚙️ Implementation Guide** - Step-by-step development setup and tutorials
-- **🧪 Testing & Quality Assurance** - Comprehensive testing strategies and optimization
-- **🚀 Deployment & Infrastructure** - Docker, deployment options, and monitoring
-- **💼 Commercialization Strategy** - Market analysis, revenue models, and business development
-
-### ✨ Features
-
-- **Dark/Light Theme Toggle** - User preference with persistence
-- **Dynamic Navigation** - Smooth section switching without page reloads
-- **Search Functionality** - Quick content search with keyboard shortcuts (Ctrl+K)
-- **Code Highlighting** - Syntax highlighting with copy-to-clipboard functionality
-- **Mobile Responsive** - Optimized for all devices and screen sizes
-- **Interactive Elements** - Hover effects, animations, and engaging user interface
-
-## 🚀 Quick Start
-
-### View Documentation
-
-1. Open `index.html` in any modern web browser
-2. Navigate between sections using the sidebar
-3. Toggle themes with the 🌙/☀️ button
-4. Use Ctrl+K to open search
-5. Copy code snippets with the � button
-
-### Prerequisites (for CORTEX development)
-
-- **Operating System**: Windows 10/11, macOS 12+, or Ubuntu 20.04+
-- **CPU**: Intel i5/AMD Ryzen 5 or better (i7-1355U optimal)
-- **RAM**: 8GB minimum, 16GB recommended
-- **Storage**: 20GB free space (SSD recommended)
-- **Python**: 3.9 or higher
-- **Node.js**: 16 or higher
-- **Docker**: Latest version
-
-### Installation
-
-1. **Clone the Repository**
+1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/cortex-ecosystem.git
-   cd cortex-ecosystem
+   git clone <repository-url>
+   cd Documentation
    ```
 
-2. **Run Setup Script**
+2. **Install dependencies**
 
    ```bash
-   # On Linux/macOS
-   chmod +x deployment/scripts/setup_dev.sh
-   ./deployment/scripts/setup_dev.sh
-   
-   # On Windows
-   powershell -ExecutionPolicy Bypass -File deployment/scripts/setup_dev.ps1
+   npm install
    ```
 
-3. **Start the System**
+3. **Start development server**
 
    ```bash
-   # Activate Python environment
-   source cortex-env/bin/activate  # Linux/macOS
-   # cortex-env\Scripts\activate   # Windows
-   
-   # Start all services
-   docker-compose up -d
-   
-   # Or start individually
-   python -m cortex_core.main
+   npm run dev
    ```
 
-4. **Access the Interface**
-   - **Codexa IDE**: <http://localhost:3000>
-   - **CORTEX API**: <http://localhost:8080>
-   - **Monitoring**: <http://localhost:9090>
+4. **Open in browser**
 
-## 🎯 Learning Objectives
+   ``` bash
+   http://localhost:5173
+   ```
 
-This project is designed as a comprehensive learning experience for computer science students and developers:
+## Usage
 
-### **Technical Skills**
+### Search Functionality
 
-- Advanced Python and JavaScript development
-- AI/ML integration and optimization
-- Voice processing and natural language understanding
-- Computer vision and gesture recognition
-- Database design and vector storage
-- Docker containerization and deployment
-- API design and microservices architecture
+1. Type in the search box (minimum 3 characters)
+2. View results with relevance scores
+3. Click any result to navigate to that section
+4. Clear search with the X button
 
-### **Professional Skills**
+### Export Options
 
-- Project management and planning
-- Technical documentation
-- Testing and quality assurance
-- DevOps and deployment strategies
-- Business development and commercialization
-- Team collaboration and version control
+1. Click the export button (📄) in the header
+2. Choose **Export as PDF** for printing/offline reading
+3. Choose **Export as Markdown** for development documentation
+4. Files will be downloaded automatically
 
-## 🔒 Privacy & Security
+### Navigation
 
-CORTEX is built with privacy as a core principle:
+- Use the sidebar to browse sections
+- Click project cards to learn about specific components
+- Use the progress indicator to track documentation coverage
 
-- **Local Processing**: All AI inference happens on your machine
-- **No Telemetry**: No usage data is sent to external servers
-- **Encrypted Storage**: All local data is encrypted at rest
-- **Selective Sync**: Users control what data (if any) is shared
-- **Open Source**: Transparent and auditable codebase
+## Architecture
 
-## 🤝 Contributing
+The documentation is built as a modern React SPA with:
 
-We welcome contributions from the community! Please see our contributing guidelines:
+- **Component-based architecture** for maintainability
+- **State management** for search and navigation
+- **Responsive design** with Tailwind CSS
+- **Export functionality** for multiple formats
+- **Search engine** with intelligent matching
 
-1. **Fork the Repository**
-2. **Create a Feature Branch** (`git checkout -b feature/amazing-feature`)
-3. **Commit Changes** (`git commit -m 'Add amazing feature'`)
-4. **Push to Branch** (`git push origin feature/amazing-feature`)
-5. **Open a Pull Request**
+## Student-Friendly Features
 
-### Development Guidelines
+- All technologies are **100% free**
+- **No paid subscriptions** required
+- **Open-source alternatives** prioritized
+- **Step-by-step implementation guides**
+- **Visual diagrams** for better understanding
+- **Local-first development** approach
 
-- Follow PEP 8 for Python code
-- Use TypeScript for JavaScript components
-- Write comprehensive tests for new features
-- Update documentation for any changes
-- Ensure all CI/CD checks pass
+## Contributing
 
-## 📊 Project Status
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-- **Current Version**: 1.0.0-beta
-- **Development Status**: Active development
-- **License**: MIT License
-- **Platform Support**: Windows, macOS, Linux
-- **Language Support**: English (more languages planned)
+## License
 
-### Milestones
-
-- [x] Project Architecture Design
-- [x] Core Component Development
-- [x] Integration Testing
-- [x] Documentation Completion
-- [ ] Beta Testing Program
-- [ ] Public Release
-- [ ] Plugin Marketplace
-- [ ] Mobile App Development
-
-## 🆘 Support
-
-### Getting Help
-
-- **Documentation**: Start with this comprehensive guide
-- **Issues**: Report bugs on GitHub Issues
-- **Discussions**: Join our GitHub Discussions
-- **Email**: <support@cortex-ai.dev>
-
-### Community
-
-- **Discord**: Join our developer community
-- **Twitter**: Follow @CortexAI for updates
-- **YouTube**: Tutorial videos and demos
-- **Blog**: Technical articles and insights
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **OpenAI**: For inspiration and AI research
-- **Hugging Face**: For transformer models and tools
-- **MediaPipe**: For gesture recognition capabilities
-- **The Open Source Community**: For countless libraries and tools
-
-## 🔗 Links
-
-- **Documentation**: [Full Documentation](index.html)
-- **Website**: <https://cortex-ai.dev>
-- **GitHub**: <https://github.com/yourusername/cortex-ecosystem>
-- **Demo Video**: <https://youtube.com/watch?v=demo>
-- **Blog**: <https://blog.cortex-ai.dev>
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
-**Built with ❤️ for the developer community**
-
-*CORTEX AI Ecosystem - Where privacy meets productivity*
+Built with ❤️ for student developers

@@ -1,6 +1,130 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
-const MainContent = ({ currentSection, darkMode }) => {
+const MainContent = ({ 
+  currentSection, 
+  darkMode, 
+  searchQuery, 
+  searchResults, 
+  showSearch 
+}) => {
+  
+  // Search functionality
+  const searchContent = (query) => {
+    if (!query || query.length < 3) return []
+    
+    const results = []
+    const searchTerms = query.toLowerCase().split(' ')
+    
+    // Define searchable content structure
+    const searchableContent = [
+      { section: 'overview', title: 'Overview & Integration', keywords: ['cortex', 'sentineldb', 'cerebro', 'codexa', 'ai', 'ecosystem', 'development', 'integration'] },
+      { section: 'architecture', title: 'Architecture & Specifications', keywords: ['architecture', 'design', 'specifications', 'patterns', 'microservices', 'event-driven', 'privacy'] },
+      { section: 'implementation', title: 'Implementation Guide', keywords: ['implementation', 'technologies', 'stack', 'free', 'open-source', 'python', 'javascript', 'react', 'fastapi', 'sqlite', 'electron'] },
+      { section: 'diagrams', title: 'System Diagrams', keywords: ['diagrams', 'architecture', 'flow', 'visual', 'system', 'components', 'data'] },
+      { section: 'testing', title: 'Testing & Deployment', keywords: ['testing', 'deployment', 'qa', 'ci/cd', 'automation', 'monitoring'] },
+      { section: 'roadmap', title: 'Advanced Features & Roadmap', keywords: ['roadmap', 'future', 'features', 'enhancements', 'timeline', 'development'] }
+    ]
+    
+    // Search through content
+    searchableContent.forEach(item => {
+      const matchScore = searchTerms.reduce((score, term) => {
+        const titleMatch = item.title.toLowerCase().includes(term) ? 10 : 0
+        const keywordMatch = item.keywords.some(keyword => keyword.includes(term)) ? 5 : 0
+        return score + titleMatch + keywordMatch
+      }, 0)
+      
+      if (matchScore > 0) {
+        results.push({
+          ...item,
+          score: matchScore,
+          snippet: `Found in ${item.title} section`
+        })
+      }
+    })
+    
+    return results.sort((a, b) => b.score - a.score).slice(0, 10)
+  }
+  
+  const getSearchResults = () => {
+    if (!showSearch || !searchQuery) return null
+    
+    const results = searchContent(searchQuery)
+    
+    return (
+      <div className="space-y-6">
+        <div className={`p-6 rounded-lg border ${
+          darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+        }`}>
+          <h2 className={`text-2xl font-bold mb-4 ${
+            darkMode ? 'text-white' : 'text-gray-900'
+          }`}>
+            Search Results for "{searchQuery}"
+          </h2>
+          <p className={`text-sm ${
+            darkMode ? 'text-gray-400' : 'text-gray-600'
+          }`}>
+            Found {results.length} result{results.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+        
+        {results.length > 0 ? (
+          <div className="space-y-4">
+            {results.map((result, index) => (
+              <div 
+                key={index}
+                className={`p-6 rounded-lg border cursor-pointer transition-all hover:shadow-lg ${
+                  darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-400'
+                }`}
+                onClick={() => {
+                  // Navigate to the section when clicked
+                  window.dispatchEvent(new CustomEvent('navigateToSection', { detail: result.section }))
+                }}
+              >
+                <h3 className={`text-lg font-semibold mb-2 ${
+                  darkMode ? 'text-white' : 'text-gray-900'
+                }`}>
+                  {result.title}
+                </h3>
+                <p className={`text-sm ${
+                  darkMode ? 'text-gray-300' : 'text-gray-600'
+                }`}>
+                  {result.snippet}
+                </p>
+                <div className="flex items-center mt-3">
+                  <span className={`text-xs px-2 py-1 rounded-full ${
+                    darkMode ? 'bg-blue-900 text-blue-200' : 'bg-blue-100 text-blue-800'
+                  }`}>
+                    {result.section}
+                  </span>
+                  <span className={`text-xs ml-2 ${
+                    darkMode ? 'text-gray-400' : 'text-gray-500'
+                  }`}>
+                    Relevance: {Math.round((result.score / 50) * 100)}%
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className={`p-8 text-center rounded-lg border ${
+            darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+          }`}>
+            <div className="text-4xl mb-4">🔍</div>
+            <h3 className={`text-lg font-semibold mb-2 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              No results found
+            </h3>
+            <p className={`text-sm ${
+              darkMode ? 'text-gray-400' : 'text-gray-600'
+            }`}>
+              Try different keywords or check spelling
+            </p>
+          </div>
+        )}
+      </div>
+    )
+  }
   
   const getOverviewContent = () => (
     <div className="space-y-8">
@@ -1380,6 +1504,7 @@ const MainContent = ({ currentSection, darkMode }) => {
       </div>
     </div>
   )
+  
   const getArchitectureContent = () => (
     <div className="space-y-8">
       <div className={`p-6 rounded-lg border ${
@@ -1388,87 +1513,588 @@ const MainContent = ({ currentSection, darkMode }) => {
         <h1 className={`text-3xl font-bold mb-6 ${
           darkMode ? 'text-white' : 'text-gray-900'
         }`}>
-          Architecture & Technical Specifications
+          Development Roadmap & Task Architecture
         </h1>
         <p className={`text-lg mb-6 ${
           darkMode ? 'text-gray-300' : 'text-gray-600'
         }`}>
-          Comprehensive technical architecture for a local-first, intelligent, modular, and secure AI development ecosystem.
+          Comprehensive development guide with sequential steps and parallel tasks for building the AI Development Ecosystem.
         </p>
       </div>
 
-      {/* System Architecture Overview */}
+      {/* Sequential Development Roadmap */}
       <div className={`p-6 rounded-lg border ${
         darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
       }`}>
-        <h2 className={`text-2xl font-bold mb-4 ${
+        <h2 className={`text-2xl font-bold mb-6 flex items-center ${
           darkMode ? 'text-white' : 'text-gray-900'
         }`}>
-          🏗️ System Architecture Overview
+          <span className="mr-3">🗺️</span>
+          Sequential Development Roadmap
         </h2>
-        <p className={`mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-          The AI Development Ecosystem follows a layered, microservices architecture with four primary components that integrate through secure APIs and shared data protocols.
-        </p>
         
-        <div className={`p-4 rounded-lg mb-6 ${
-          darkMode ? 'bg-gray-900 border border-gray-700' : 'bg-gray-50 border border-gray-200'
-        }`}>
-          <pre className={`text-sm overflow-x-auto ${darkMode ? 'text-green-400' : 'text-gray-800'}`}>
-{`                   ┌────────────────────────────┐
-                   │      CORTEX AI Core        │
-                   │   (NLP + Code Analysis)    │
-                   └────────────┬───────────────┘
-                                │
-                      ┌────────▼─────────┐
-                      │ Speech-to-Text   │
-                      │   (Whisper)      │
-                      └────────┬─────────┘
-                                │
-                     ┌─────────▼──────────┐
-                     │   Intent Handler   │
-                     │(LLM + Personal DB) │
-                     └─────────┬──────────┘
-               ┌────────────┐  │  ┌──────────────┐
-               │ SentinelDB │◄─┼─►│ Cerebro Shell│
-               │ (Storage)  │  │  │  (Terminal)  │
-               └────────────┘  │  └──────────────┘
-                              │
-                     ┌────────▼─────────┐
-                     │   Codexa IDE     │
-                     │ (Development)    │
-                     └──────────────────┘`}
-          </pre>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className={`p-4 rounded-lg ${
-            darkMode ? 'bg-blue-900 bg-opacity-20 border border-blue-800' : 'bg-blue-50 border border-blue-200'
+        <p className={`mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+          Step-by-step development plan from foundation to full ecosystem, following dependency order.
+        </p>        <div className="space-y-6">
+          {/* Foundation Layer */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-blue-900 to-indigo-900' : 'bg-gradient-to-r from-blue-50 to-indigo-50'
           }`}>
-            <h4 className={`font-bold mb-2 ${darkMode ? 'text-blue-200' : 'text-blue-800'}`}>
-              🔧 Core Technologies
-            </h4>
-            <ul className={`space-y-1 text-sm ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
-              <li>• Python 3.10+ (Backend Services)</li>
-              <li>• Node.js 18+ (Frontend & APIs)</li>
-              <li>• Docker (Containerization)</li>
-              <li>• SQLite/ChromaDB (Data Storage)</li>
-              <li>• WebSocket (Real-time Communication)</li>
-            </ul>
+            <h3 className={`text-xl font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              🏗️ Foundation Layer
+            </h3>
+            
+            <div className="space-y-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-blue-200' : 'text-blue-800'}`}>
+                  Core Infrastructure Setup
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
+                  <li>• <strong>Project Structure:</strong> Create monorepo with component folders</li>
+                  <li>• <strong>Development Environment:</strong> Set up build tools, linting, testing framework</li>
+                  <li>• <strong>Inter-Process Communication:</strong> Design API schemas and WebSocket protocols</li>
+                  <li>• <strong>Configuration System:</strong> Environment variables, config files, user preferences</li>
+                  <li>• <strong>Logging Framework:</strong> Structured logging with privacy compliance</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-indigo-200' : 'text-indigo-800'}`}>
+                  SentinelDB Core (Data Foundation)
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-indigo-100' : 'text-indigo-700'}`}>
+                  <li>• <strong>Database Schema Design:</strong> User profiles, system configurations, behavioral patterns</li>
+                  <li>• <strong>Encryption Layer:</strong> Client-side encryption, key management, secure storage</li>
+                  <li>• <strong>Basic CRUD Operations:</strong> Create, read, update, delete for core entities</li>
+                  <li>• <strong>Database Connection Management:</strong> Connection pooling, transaction handling</li>
+                  <li>• <strong>Migration System:</strong> Version control for database schema changes</li>
+                </ul>
+              </div>
+            </div>
           </div>
-          
-          <div className={`p-4 rounded-lg ${
-            darkMode ? 'bg-green-900 bg-opacity-20 border border-green-800' : 'bg-green-50 border border-green-200'
+
+          {/* Command Hub Development */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-purple-900 to-pink-900' : 'bg-gradient-to-r from-purple-50 to-pink-50'
           }`}>
-            <h4 className={`font-bold mb-2 ${darkMode ? 'text-green-200' : 'text-green-800'}`}>
-              🎯 Design Principles
-            </h4>
-            <ul className={`space-y-1 text-sm ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
-              <li>• Local-First Architecture</li>
-              <li>• Modular Plugin System</li>
-              <li>• Privacy-Focused Design</li>
-              <li>• Cross-Platform Compatibility</li>
-              <li>• Offline-First Functionality</li>
-            </ul>
+            <h3 className={`text-xl font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              🧠 CORTEX AI Command Hub Development
+            </h3>
+            
+            <div className="space-y-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                  Core AI Infrastructure
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                  <li>• <strong>Local LLM Integration:</strong> Set up model loading, inference pipeline</li>
+                  <li>• <strong>Context Management:</strong> Conversation history, session state, memory system</li>
+                  <li>• <strong>Intent Classification:</strong> Command parsing, task categorization</li>
+                  <li>• <strong>Component Communication API:</strong> Task delegation system to other components</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-pink-200' : 'text-pink-800'}`}>
+                  Input Processing Systems
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-pink-100' : 'text-pink-700'}`}>
+                  <li>• <strong>Keyboard Input Handler:</strong> Text processing, command parsing</li>
+                  <li>• <strong>Voice Recognition System:</strong> Speech-to-text, hotword detection</li>
+                  <li>• <strong>Gesture Recognition System:</strong> Computer vision, hand tracking</li>
+                  <li>• <strong>Input Unification Layer:</strong> Convert all inputs to common command format</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                  Event-Driven Coordination
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                  <li>• <strong>Event Bus System:</strong> Inter-component messaging, event queuing</li>
+                  <li>• <strong>Time-Based Triggers:</strong> Scheduled tasks, cleanup routines</li>
+                  <li>• <strong>System Event Monitoring:</strong> File system changes, process monitoring</li>
+                  <li>• <strong>Workflow Orchestration:</strong> Multi-step task coordination</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Execution Components */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-green-900 to-teal-900' : 'bg-gradient-to-r from-green-50 to-teal-50'
+          }`}>
+            <h3 className={`text-xl font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              ⚡ Execution Components Development
+            </h3>
+            
+            <div className="space-y-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-green-200' : 'text-green-800'}`}>
+                  Cerebro Shell Development
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
+                  <li>• <strong>Terminal Emulator Core:</strong> Cross-platform terminal interface</li>
+                  <li>• <strong>CORTEX Command Receiver:</strong> API to receive delegated commands</li>
+                  <li>• <strong>Command Execution Engine:</strong> Safe command execution with sandboxing</li>
+                  <li>• <strong>Smart Auto-completion:</strong> Context-aware suggestions</li>
+                  <li>• <strong>Session Management:</strong> Multiple terminal sessions, state persistence</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-teal-200' : 'text-teal-800'}`}>
+                  Codexa IDE Foundation
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-teal-100' : 'text-teal-700'}`}>
+                  <li>• <strong>Text Editor Core:</strong> Syntax highlighting, basic editing features</li>
+                  <li>• <strong>File System Integration:</strong> Project explorer, file operations</li>
+                  <li>• <strong>CORTEX Integration Layer:</strong> Receive AI-generated code suggestions</li>
+                  <li>• <strong>Plugin Architecture:</strong> Language support, extension system</li>
+                  <li>• <strong>Basic Debugging Interface:</strong> Breakpoints, variable inspection</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Intelligence & Integration */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-orange-900 to-red-900' : 'bg-gradient-to-r from-orange-50 to-red-50'
+          }`}>
+            <h3 className={`text-xl font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              🔮 Intelligence & Integration Layer
+            </h3>
+            
+            <div className="space-y-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-orange-200' : 'text-orange-800'}`}>
+                  Behavioral Intelligence System
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-orange-100' : 'text-orange-700'}`}>
+                  <li>• <strong>Activity Tracking:</strong> User behavior analysis, pattern recognition</li>
+                  <li>• <strong>Skill Assessment:</strong> Code quality metrics, improvement suggestions</li>
+                  <li>• <strong>Predictive Assistance:</strong> Proactive tool suggestions, workflow optimization</li>
+                  <li>• <strong>Personal AI Tuning:</strong> Model fine-tuning based on user patterns</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-red-200' : 'text-red-800'}`}>
+                  Advanced Integration Features
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-red-100' : 'text-red-700'}`}>
+                  <li>• <strong>Cross-Component Workflows:</strong> Complex task automation</li>
+                  <li>• <strong>External Database Integration:</strong> Connect to user's production databases</li>
+                  <li>• <strong>Advanced Voice Commands:</strong> Complex multi-step voice workflows</li>
+                  <li>• <strong>Gesture-Driven Development:</strong> Code navigation, debugging gestures</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* System Optimization */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-gray-800 to-gray-700' : 'bg-gradient-to-r from-gray-100 to-gray-200'
+          }`}>
+            <h3 className={`text-xl font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              ✨ System Optimization & Polish
+            </h3>
+            
+            <div className="space-y-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                  Performance Optimization
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-gray-100' : 'text-gray-700'}`}>
+                  <li>• <strong>Memory Management:</strong> Optimize resource usage, garbage collection</li>
+                  <li>• <strong>Performance Profiling:</strong> Identify bottlenecks, optimize hot paths</li>
+                  <li>• <strong>Startup Optimization:</strong> Reduce initialization time, lazy loading</li>
+                  <li>• <strong>Cross-Platform Testing:</strong> Windows, macOS, Linux compatibility</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                  User Experience Polish
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-gray-100' : 'text-gray-700'}`}>
+                  <li>• <strong>UI/UX Refinement:</strong> Interface polish, accessibility improvements</li>
+                  <li>• <strong>Documentation System:</strong> In-app help, tutorials, onboarding</li>
+                  <li>• <strong>Error Handling:</strong> Graceful error recovery, user-friendly messages</li>
+                  <li>• <strong>Testing & QA:</strong> Comprehensive testing, bug fixes, stability</li>
+                </ul>
+              </div>
+            </div>
+          </div></div>
+      </div>
+
+      {/* Independent Parallel Tasks */}
+      <div className={`p-6 rounded-lg border ${
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+      }`}>
+        <h2 className={`text-2xl font-bold mb-6 flex items-center ${
+          darkMode ? 'text-white' : 'text-gray-900'
+        }`}>
+          <span className="mr-3">⚡</span>
+          Independent Parallel Tasks
+        </h2>
+        
+        <p className={`mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+          Tasks that can be developed simultaneously without dependencies, allowing for parallel development and faster overall progress.
+        </p>
+
+        <div className="space-y-6">
+          {/* Core System Components */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-cyan-900 to-blue-900' : 'bg-gradient-to-r from-cyan-50 to-blue-50'
+          }`}>
+            <h3 className={`text-xl font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              🔧 Core System Components (Can Start Immediately)
+            </h3>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                  🎤 Voice Recognition Engine
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-cyan-100' : 'text-cyan-700'}`}>
+                  <li>• <strong>Speech-to-Text System:</strong> Implement offline STT with multiple model options</li>
+                  <li>• <strong>Hotword Detection:</strong> Always-listening activation system</li>
+                  <li>• <strong>Voice Activity Detection:</strong> Determine when user is speaking</li>
+                  <li>• <strong>Audio Processing Pipeline:</strong> Noise reduction, audio preprocessing</li>
+                  <li>• <strong>Multi-language Support:</strong> Language detection and switching</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-blue-200' : 'text-blue-800'}`}>
+                  👋 Gesture Recognition System
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
+                  <li>• <strong>Computer Vision Pipeline:</strong> Camera input processing, hand detection</li>
+                  <li>• <strong>Gesture Classification:</strong> Custom gesture recognition models</li>
+                  <li>• <strong>Calibration System:</strong> User-specific gesture training</li>
+                  <li>• <strong>Performance Optimization:</strong> Real-time processing, efficient inference</li>
+                  <li>• <strong>Gesture Library:</strong> Predefined gesture commands, custom gestures</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                  🗄️ Database Schema & Encryption
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-cyan-100' : 'text-cyan-700'}`}>
+                  <li>• <strong>Schema Design:</strong> User data, behavioral patterns, system configs</li>
+                  <li>• <strong>Encryption Implementation:</strong> Client-side encryption, key management</li>
+                  <li>• <strong>Data Migration Tools:</strong> Version control for schema changes</li>
+                  <li>• <strong>Backup & Recovery:</strong> Automated backups, disaster recovery</li>
+                  <li>• <strong>Performance Indexing:</strong> Query optimization, efficient data access</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-blue-200' : 'text-blue-800'}`}>
+                  🤖 Local LLM Integration
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
+                  <li>• <strong>Model Management:</strong> Download, load, update LLM models</li>
+                  <li>• <strong>Inference Optimization:</strong> GPU acceleration, quantization, caching</li>
+                  <li>• <strong>Context Management:</strong> Conversation history, token management</li>
+                  <li>• <strong>Custom Fine-tuning:</strong> User-specific model personalization</li>
+                  <li>• <strong>Multi-Model Support:</strong> Switch between different LLM models</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* User Interface Components */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-purple-900 to-indigo-900' : 'bg-gradient-to-r from-purple-50 to-indigo-50'
+          }`}>
+            <h3 className={`text-xl font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              🎨 User Interface Components (Independent Development)
+            </h3>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                  💻 Codexa IDE Frontend
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                  <li>• <strong>Text Editor Interface:</strong> Syntax highlighting, line numbers, folding</li>
+                  <li>• <strong>File Explorer:</strong> Project tree, file operations, search</li>
+                  <li>• <strong>Theme System:</strong> Dark/light modes, customizable themes</li>
+                  <li>• <strong>Settings Panel:</strong> User preferences, configuration management</li>
+                  <li>• <strong>Tab Management:</strong> Multiple files, tab persistence</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-indigo-200' : 'text-indigo-800'}`}>
+                  💭 Cerebro Shell Interface
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-indigo-100' : 'text-indigo-700'}`}>
+                  <li>• <strong>Terminal Emulator:</strong> Cross-platform terminal rendering</li>
+                  <li>• <strong>Command History:</strong> Search, favorites, auto-completion</li>
+                  <li>• <strong>Multiple Sessions:</strong> Tab management, session persistence</li>
+                  <li>• <strong>Customization:</strong> Colors, fonts, prompt customization</li>
+                  <li>• <strong>Output Processing:</strong> Syntax highlighting for common outputs</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                  🧠 CORTEX AI Interface
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                  <li>• <strong>Chat Interface:</strong> Conversation history, message formatting</li>
+                  <li>• <strong>Status Indicators:</strong> System status, processing indicators</li>
+                  <li>• <strong>Input Methods:</strong> Text input, microphone controls</li>
+                  <li>• <strong>Response Display:</strong> Code blocks, formatted responses</li>
+                  <li>• <strong>Settings Dashboard:</strong> AI preferences, model selection</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-indigo-200' : 'text-indigo-800'}`}>
+                  📊 System Monitoring Dashboard
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-indigo-100' : 'text-indigo-700'}`}>
+                  <li>• <strong>Performance Metrics:</strong> CPU, memory, disk usage visualization</li>
+                  <li>• <strong>Activity Analytics:</strong> Usage patterns, productivity insights</li>
+                  <li>• <strong>System Health:</strong> Component status, error tracking</li>
+                  <li>• <strong>Data Usage:</strong> Storage usage, privacy audit trail</li>
+                  <li>• <strong>Productivity Reports:</strong> Coding statistics, skill progression</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Research & Development Tasks */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-green-900 to-teal-900' : 'bg-gradient-to-r from-green-50 to-teal-50'
+          }`}>
+            <h3 className={`text-xl font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              🔬 Research & Development Tasks (Long-term Parallel Work)
+            </h3>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-green-200' : 'text-green-800'}`}>
+                  🔮 Behavioral Intelligence Research
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
+                  <li>• <strong>Pattern Recognition:</strong> User behavior analysis algorithms</li>
+                  <li>• <strong>Predictive Models:</strong> Next action prediction, workflow optimization</li>
+                  <li>• <strong>Privacy-Preserving ML:</strong> Local learning without data exposure</li>
+                  <li>• <strong>Skill Assessment:</strong> Code quality metrics, improvement tracking</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-teal-200' : 'text-teal-800'}`}>
+                  🛡️ Security & Privacy Implementation
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-teal-100' : 'text-teal-700'}`}>
+                  <li>• <strong>Zero-Knowledge Architecture:</strong> Complete data isolation design</li>
+                  <li>• <strong>Encryption Research:</strong> Advanced encryption methods, key management</li>
+                  <li>• <strong>Secure Communication:</strong> Inter-component security protocols</li>
+                  <li>• <strong>Privacy Audit Tools:</strong> Data flow tracking, compliance verification</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-green-200' : 'text-green-800'}`}>
+                  ⚡ Performance Optimization Research
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
+                  <li>• <strong>Memory Optimization:</strong> Efficient data structures, memory pooling</li>
+                  <li>• <strong>Concurrent Processing:</strong> Multi-threading, async operations</li>
+                  <li>• <strong>Caching Strategies:</strong> Intelligent caching, cache invalidation</li>
+                  <li>• <strong>Resource Management:</strong> CPU, GPU, memory allocation optimization</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-teal-200' : 'text-teal-800'}`}>
+                  🌐 External Integration Planning
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-teal-100' : 'text-teal-700'}`}>
+                  <li>• <strong>Database Connectors:</strong> PostgreSQL, MySQL, MongoDB adapters</li>
+                  <li>• <strong>Version Control:</strong> Git integration, repository management</li>
+                  <li>• <strong>Cloud Services:</strong> Optional cloud sync, backup solutions</li>
+                  <li>• <strong>Plugin Architecture:</strong> Third-party extensions, marketplace design</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Documentation & Testing */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-orange-900 to-red-900' : 'bg-gradient-to-r from-orange-50 to-red-50'
+          }`}>
+            <h3 className={`text-xl font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              📝 Documentation & Testing (Continuous Parallel Work)
+            </h3>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-orange-200' : 'text-orange-800'}`}>
+                  📚 Technical Documentation
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-orange-100' : 'text-orange-700'}`}>
+                  <li>• <strong>API Documentation:</strong> Component interfaces, method documentation</li>
+                  <li>• <strong>Architecture Guides:</strong> System design, data flow documentation</li>
+                  <li>• <strong>Setup Instructions:</strong> Installation, configuration guides</li>
+                  <li>• <strong>Troubleshooting:</strong> Common issues, debugging guides</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-red-200' : 'text-red-800'}`}>
+                  🧪 Testing Infrastructure
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-red-100' : 'text-red-700'}`}>
+                  <li>• <strong>Unit Test Framework:</strong> Component testing, mock data</li>
+                  <li>• <strong>Integration Testing:</strong> Component interaction testing</li>
+                  <li>• <strong>Performance Testing:</strong> Load testing, benchmarking</li>
+                  <li>• <strong>User Acceptance Testing:</strong> UI testing, workflow validation</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-orange-200' : 'text-orange-800'}`}>
+                  🎓 User Documentation
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-orange-100' : 'text-orange-700'}`}>
+                  <li>• <strong>User Manuals:</strong> Feature guides, workflow tutorials</li>
+                  <li>• <strong>Video Tutorials:</strong> Screen recordings, demo videos</li>
+                  <li>• <strong>Quick Start Guides:</strong> Getting started, first steps</li>
+                  <li>• <strong>FAQ & Help:</strong> Common questions, help system</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-red-200' : 'text-red-800'}`}>
+                  🚀 Deployment & DevOps
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-red-100' : 'text-red-700'}`}>
+                  <li>• <strong>Build Automation:</strong> CI/CD pipelines, automated builds</li>
+                  <li>• <strong>Packaging:</strong> Cross-platform installers, distribution</li>
+                  <li>• <strong>Monitoring Tools:</strong> Performance monitoring, error tracking</li>
+                  <li>• <strong>Update System:</strong> Automatic updates, version management</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className={`mt-8 p-6 rounded-lg ${
+          darkMode ? 'bg-gradient-to-r from-emerald-800 to-cyan-800' : 'bg-gradient-to-r from-emerald-100 to-cyan-100'
+        }`}>
+          <h3 className={`text-xl font-bold mb-4 ${
+            darkMode ? 'text-white' : 'text-gray-900'
+          }`}>
+            🎯 Strategic Advantage of Parallel Development
+          </h3>
+          <div className="grid md:grid-cols-3 gap-6">            <div>
+              <h4 className={`font-bold mb-2 ${darkMode ? 'text-emerald-200' : 'text-emerald-800'}`}>
+                ⚡ Faster Development Cycle
+              </h4>
+              <p className={`text-sm ${darkMode ? 'text-emerald-100' : 'text-emerald-700'}`}>
+                Multiple developers can work simultaneously on different components, significantly reducing overall development time through parallel execution of independent tasks.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className={`font-bold mb-2 ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                🔄 Flexible Resource Allocation
+              </h4>
+              <p className={`text-sm ${darkMode ? 'text-cyan-100' : 'text-cyan-700'}`}>
+                Assign specialists to their expertise areas: ML engineers on AI components, UI/UX designers on interfaces, systems engineers on performance optimization.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className={`font-bold mb-2 ${darkMode ? 'text-emerald-200' : 'text-emerald-800'}`}>
+                🛡️ Risk Mitigation
+              </h4>
+              <p className={`text-sm ${darkMode ? 'text-emerald-100' : 'text-emerald-700'}`}>
+                If one component faces challenges, other components continue development. Independent tasks provide fallback options and maintain project momentum.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -2246,9 +2872,9 @@ const MainContent = ({ currentSection, darkMode }) => {
           </div>
         </div>
       </div>
-    </div>
-  )
-  const getImplementation1Content = () => (
+    </div>  )
+  
+  const getImplementationContent = () => (
     <div className="space-y-8">
       <div className={`p-6 rounded-lg border ${
         darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
@@ -2256,983 +2882,398 @@ const MainContent = ({ currentSection, darkMode }) => {
         <h1 className={`text-3xl font-bold mb-6 ${
           darkMode ? 'text-white' : 'text-gray-900'
         }`}>
-          Implementation Guide - Phase 1 (Steps 1-6)
+          Implementation Guide & Technology Stack
         </h1>
         <p className={`text-lg mb-6 ${
           darkMode ? 'text-gray-300' : 'text-gray-600'
         }`}>
-          Foundation setup, environment configuration, and core development steps for the AI Development Ecosystem.
+          Comprehensive guide to free, open-source technologies and implementation strategies for student developers.
         </p>
       </div>
 
-      {/* Step 1: Core System Setup */}
+      {/* Core Technology Stack */}
       <div className={`p-6 rounded-lg border ${
         darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
       }`}>
-        <h2 className={`text-2xl font-bold mb-4 flex items-center ${
+        <h2 className={`text-2xl font-bold mb-6 flex items-center ${
           darkMode ? 'text-white' : 'text-gray-900'
         }`}>
-          <span className="mr-3 px-2 py-1 bg-blue-500 text-white rounded-full text-sm">1</span>
-          Core System Setup
-        </h2>
-        
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🖥️ Operating System Requirements
-            </h4>
-            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-              <div className="space-y-2">
-                <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <strong>Primary:</strong> Ubuntu 22.04 LTS (recommended for development)
-                </div>
-                <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <strong>Secondary:</strong> Windows 10/11 (with WSL2 for Linux compatibility)
-                </div>
-                <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <strong>macOS:</strong> macOS Big Sur or later (experimental support)
-                </div>
-              </div>
-            </div>
-            
-            <h4 className={`font-bold mb-3 mt-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🔧 Essential Dependencies
-            </h4>
-            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-              <div className="space-y-3">
-                <div>
-                  <h5 className={`font-semibold text-sm ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>
-                    Python Environment
-                  </h5>
-                  <div className={`text-sm mt-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Python 3.10+ with pip, virtual environment support
-                  </div>
-                  <div className={`mt-2 p-2 rounded text-xs font-mono ${
-                    darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-                  }`}>
-                    sudo apt install python3.10 python3-pip python3-venv
-                  </div>
-                </div>
-                
-                <div>
-                  <h5 className={`font-semibold text-sm ${darkMode ? 'text-green-300' : 'text-green-700'}`}>
-                    Node.js & NPM
-                  </h5>
-                  <div className={`text-sm mt-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Node.js 18+ for frontend and API services
-                  </div>
-                  <div className={`mt-2 p-2 rounded text-xs font-mono ${
-                    darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-                  }`}>
-                    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -<br/>
-                    sudo apt-get install -y nodejs
-                  </div>
-                </div>
-                
-                <div>
-                  <h5 className={`font-semibold text-sm ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
-                    Docker (Optional)
-                  </h5>
-                  <div className={`text-sm mt-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    For containerized LLM deployment
-                  </div>
-                  <div className={`mt-2 p-2 rounded text-xs font-mono ${
-                    darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-                  }`}>
-                    sudo apt install docker.io docker-compose
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              📁 Project Structure Setup
-            </h4>
-            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-              <div className={`text-xs font-mono ${darkMode ? 'text-green-400' : 'text-gray-800'}`}>
-                <pre>{`ai-ecosystem/
-├── cortex-ai/
-│   ├── src/
-│   ├── models/
-│   ├── tests/
-│   └── requirements.txt
-├── sentineldb/
-│   ├── core/
-│   ├── plugins/
-│   ├── migrations/
-│   └── config/
-├── cerebro-shell/
-│   ├── commands/
-│   ├── gestures/
-│   ├── plugins/
-│   └── scripts/
-├── codexa-ide/
-│   ├── electron/
-│   ├── renderer/
-│   ├── extensions/
-│   └── themes/
-├── shared/
-│   ├── api/
-│   ├── utils/
-│   └── types/
-└── docs/`}</pre>
-              </div>
-            </div>
-            
-            <h4 className={`font-bold mb-3 mt-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🔐 Virtual Environment
-            </h4>
-            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-              <div className="space-y-2">
-                <div className={`p-2 rounded text-xs font-mono ${
-                  darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-                }`}>
-                  # Create virtual environment<br/>
-                  python3 -m venv ai-ecosystem-env<br/><br/>
-                  # Activate environment<br/>
-                  source ai-ecosystem-env/bin/activate<br/><br/>
-                  # Upgrade pip<br/>
-                  pip install --upgrade pip
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Step 2: Voice Activation System */}
-      <div className={`p-6 rounded-lg border ${
-        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      }`}>
-        <h2 className={`text-2xl font-bold mb-4 flex items-center ${
-          darkMode ? 'text-white' : 'text-gray-900'
-        }`}>
-          <span className="mr-3 px-2 py-1 bg-green-500 text-white rounded-full text-sm">2</span>
-          Voice Activation (Hotword + Voiceprint)
-        </h2>
-        
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🎤 Hotword Detection Setup
-            </h4>
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>
-                  Install Porcupine SDK
-                </h5>
-                <div className={`p-2 rounded text-xs font-mono ${
-                  darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-                }`}>
-                  pip install pvporcupine pvrecorder
-                </div>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>
-                  Configuration
-                </h5>
-                <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <div className="space-y-1">
-                    <div>• Custom wake phrase: "Wake up buddy, daddy's home"</div>
-                    <div>• Sensitivity: 0.5 (adjustable)</div>
-                    <div>• Audio format: 16kHz, 16-bit, mono</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-blue-900 bg-opacity-20 border border-blue-800' : 'bg-blue-50 border border-blue-200'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-blue-200' : 'text-blue-800'}`}>
-                  💡 Implementation Notes
-                </h5>
-                <ul className={`text-xs space-y-1 ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
-                  <li>• Always-listening mode with low CPU usage</li>
-                  <li>• Hardware-optimized for Raspberry Pi compatibility</li>
-                  <li>• Fallback to cloud API if offline model fails</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🔊 Voiceprint Verification
-            </h4>
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
-                  Audio Processing Libraries
-                </h5>
-                <div className={`p-2 rounded text-xs font-mono ${
-                  darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-                }`}>
-                  pip install librosa scikit-learn numpy scipy
-                </div>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
-                  MFCC Feature Extraction
-                </h5>
-                <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <div className="space-y-1">
-                    <div>• Extract 13 MFCC coefficients</div>
-                    <div>• 25ms window, 10ms hop length</div>
-                    <div>• Use first and second derivatives</div>
-                    <div>• SVM classifier for voiceprint matching</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-yellow-900 bg-opacity-20 border border-yellow-800' : 'bg-yellow-50 border border-yellow-200'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-yellow-200' : 'text-yellow-800'}`}>
-                  🔒 Security Considerations
-                </h5>
-                <ul className={`text-xs space-y-1 ${darkMode ? 'text-yellow-100' : 'text-yellow-700'}`}>
-                  <li>• Store voiceprint templates locally only</li>
-                  <li>• Use encryption for stored voice data</li>
-                  <li>• Implement voice aging compensation</li>
-                  <li>• Backup/recovery mechanism for voice profiles</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Step 3: Speech-to-Text Implementation */}
-      <div className={`p-6 rounded-lg border ${
-        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      }`}>
-        <h2 className={`text-2xl font-bold mb-4 flex items-center ${
-          darkMode ? 'text-white' : 'text-gray-900'
-        }`}>
-          <span className="mr-3 px-2 py-1 bg-purple-500 text-white rounded-full text-sm">3</span>
-          Speech-to-Text (STT) Engine
-        </h2>
-        
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🗣️ Whisper Integration
-            </h4>
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-green-300' : 'text-green-700'}`}>
-                  Installation Options
-                </h5>
-                <div className="space-y-2">
-                  <div className={`p-2 rounded text-xs font-mono ${
-                    darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-                  }`}>
-                    # Option 1: Standard Whisper<br/>
-                    pip install openai-whisper<br/><br/>
-                    # Option 2: Faster Whisper (Recommended)<br/>
-                    pip install faster-whisper
-                  </div>
-                </div>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-green-300' : 'text-green-700'}`}>
-                  Model Selection
-                </h5>
-                <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span>tiny.en</span>
-                      <span className="text-xs">39 MB, ~32x faster</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>base.en</span>
-                      <span className="text-xs">74 MB, ~16x faster</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>small.en</span>
-                      <span className="text-xs">244 MB, ~6x faster</span>
-                    </div>
-                    <div className={`text-xs p-2 rounded ${
-                      darkMode ? 'bg-green-800 text-green-200' : 'bg-green-100 text-green-800'
-                    }`}>
-                      Recommended: base.en for development, small.en for production
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🔧 Processing Pipeline
-            </h4>
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-orange-300' : 'text-orange-700'}`}>
-                  Audio Preprocessing
-                </h5>
-                <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• Noise reduction with spectral subtraction</li>
-                  <li>• Voice activity detection (VAD)</li>
-                  <li>• Audio normalization and filtering</li>
-                  <li>• Silence trimming and padding</li>
-                </ul>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-orange-300' : 'text-orange-700'}`}>
-                  Quality Control
-                </h5>
-                <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• Audio quality assessment</li>
-                  <li>• Confidence scoring for transcriptions</li>
-                  <li>• Automatic retry on low confidence</li>
-                  <li>• Fallback to cloud STT if needed</li>
-                </ul>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-red-900 bg-opacity-20 border border-red-800' : 'bg-red-50 border border-red-200'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-red-200' : 'text-red-800'}`}>
-                  ⚠️ Error Handling
-                </h5>
-                <ul className={`text-xs space-y-1 ${darkMode ? 'text-red-100' : 'text-red-700'}`}>
-                  <li>• Background noise detection → request repetition</li>
-                  <li>• Audio buffer overflow protection</li>
-                  <li>• Model loading failure recovery</li>
-                  <li>• Memory usage monitoring</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Steps 4-6 Summary */}
-      <div className={`p-6 rounded-lg border ${
-        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      }`}>
-        <h2 className={`text-2xl font-bold mb-4 ${
-          darkMode ? 'text-white' : 'text-gray-900'
-        }`}>
-          📋 Steps 4-6 Overview
-        </h2>
-        
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className={`p-4 rounded-lg border-l-4 ${
-            darkMode ? 'bg-gray-700 border-l-cyan-500' : 'bg-gray-50 border-l-cyan-500'
-          }`}>
-            <h3 className={`font-bold mb-2 flex items-center ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              <span className="mr-2 px-2 py-1 bg-cyan-500 text-white rounded-full text-xs">4</span>
-              LLM Integration
-            </h3>
-            <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              <li>• Ollama installation and configuration</li>
-              <li>• LLaMA 3 / Mistral model setup</li>
-              <li>• LangChain context management</li>
-              <li>• Intent classification system</li>
-            </ul>
-          </div>
-          
-          <div className={`p-4 rounded-lg border-l-4 ${
-            darkMode ? 'bg-gray-700 border-l-yellow-500' : 'bg-gray-50 border-l-yellow-500'
-          }`}>
-            <h3 className={`font-bold mb-2 flex items-center ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              <span className="mr-2 px-2 py-1 bg-yellow-500 text-white rounded-full text-xs">5</span>
-              Learning Engine
-            </h3>
-            <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              <li>• SQLite/ChromaDB setup</li>
-              <li>• Habit tracking algorithms</li>
-              <li>• Pattern recognition ML models</li>
-              <li>• Personalization framework</li>
-            </ul>
-          </div>
-          
-          <div className={`p-4 rounded-lg border-l-4 ${
-            darkMode ? 'bg-gray-700 border-l-indigo-500' : 'bg-gray-50 border-l-indigo-500'
-          }`}>
-            <h3 className={`font-bold mb-2 flex items-center ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              <span className="mr-2 px-2 py-1 bg-indigo-500 text-white rounded-full text-xs">6</span>
-              Task Automation
-            </h3>
-            <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              <li>• Command execution framework</li>
-              <li>• Cross-platform compatibility</li>
-              <li>• Security sandboxing</li>
-              <li>• Subprocess management</li>
-            </ul>
-          </div>
-        </div>
-        
-        <div className={`mt-6 p-4 rounded-lg ${
-          darkMode ? 'bg-green-900 bg-opacity-20 border border-green-800' : 'bg-green-50 border border-green-200'
-        }`}>
-          <h4 className={`font-bold mb-2 ${darkMode ? 'text-green-200' : 'text-green-800'}`}>
-            ✅ Phase 1 Completion Checklist
-          </h4>
-          <div className="grid md:grid-cols-2 gap-4">
-            <ul className={`text-sm space-y-1 ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
-              <li>□ Development environment configured</li>
-              <li>□ Virtual environment activated</li>
-              <li>□ All dependencies installed</li>
-              <li>□ Project structure created</li>
-            </ul>
-            <ul className={`text-sm space-y-1 ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
-              <li>□ Hotword detection functional</li>
-              <li>□ Voiceprint verification working</li>
-              <li>□ STT pipeline operational</li>
-              <li>□ Basic LLM integration complete</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-  const getImplementation2Content = () => (
-    <div className="space-y-8">
-      <div className={`p-6 rounded-lg border ${
-        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      }`}>
-        <h1 className={`text-3xl font-bold mb-6 ${
-          darkMode ? 'text-white' : 'text-gray-900'
-        }`}>
-          Implementation Guide - Phase 2 (Steps 7-11)
-        </h1>
-        <p className={`text-lg mb-6 ${
-          darkMode ? 'text-gray-300' : 'text-gray-600'
-        }`}>
-          Advanced features, integration points, and ecosystem finalization for the complete AI development platform.
-        </p>
-      </div>
-
-      {/* Step 7: Gesture Control System */}
-      <div className={`p-6 rounded-lg border ${
-        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      }`}>
-        <h2 className={`text-2xl font-bold mb-4 flex items-center ${
-          darkMode ? 'text-white' : 'text-gray-900'
-        }`}>
-          <span className="mr-3 px-2 py-1 bg-indigo-500 text-white rounded-full text-sm">7</span>
-          Gesture Control System
-        </h2>
-        
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🖐️ MediaPipe Hand Tracking
-            </h4>
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-cyan-300' : 'text-cyan-700'}`}>
-                  Installation & Setup
-                </h5>
-                <div className={`p-2 rounded text-xs font-mono ${
-                  darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-                }`}>
-                  pip install mediapipe opencv-python pyautogui<br/>
-                  # Linux specific<br/>
-                  sudo apt install xdotool
-                </div>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-cyan-300' : 'text-cyan-700'}`}>
-                  Core Gesture Recognition
-                </h5>
-                <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span>🖐️ Open Palm</span>
-                      <span className="text-xs">Pause/Stop current operation</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>✌️ Peace Sign</span>
-                      <span className="text-xs">Scroll up/down motion</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>👆 Point</span>
-                      <span className="text-xs">Click/Select interface elements</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>👌 OK Sign</span>
-                      <span className="text-xs">Confirm action</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>🤏 Pinch</span>
-                      <span className="text-xs">Zoom in/out gesture</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🎯 Advanced Gesture Mapping
-            </h4>
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
-                  Custom Gesture Library
-                </h5>
-                <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• L-shape: Launch browser</li>
-                  <li>• C-shape: Open code editor</li>
-                  <li>• Thumbs up: Approve/Execute command</li>
-                  <li>• Fist: Force quit application</li>
-                  <li>• Wave: Switch between windows</li>
-                </ul>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
-                  System Integration
-                </h5>
-                <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <div className="space-y-1">
-                    <div>• Direct OS event injection</div>
-                    <div>• Application-specific gesture contexts</div>
-                    <div>• Multi-hand gesture combinations</div>
-                    <div>• Gesture sensitivity calibration</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-orange-900 bg-opacity-20 border border-orange-800' : 'bg-orange-50 border border-orange-200'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-orange-200' : 'text-orange-800'}`}>
-                  🔧 Performance Optimization
-                </h5>
-                <ul className={`text-xs space-y-1 ${darkMode ? 'text-orange-100' : 'text-orange-700'}`}>
-                  <li>• 30 FPS gesture recognition target</li>
-                  <li>• GPU acceleration with CUDA (optional)</li>
-                  <li>• Gesture prediction buffering</li>
-                  <li>• Low-latency mode for real-time control</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Step 8: Cross-Platform Integration */}
-      <div className={`p-6 rounded-lg border ${
-        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      }`}>
-        <h2 className={`text-2xl font-bold mb-4 flex items-center ${
-          darkMode ? 'text-white' : 'text-gray-900'
-        }`}>
-          <span className="mr-3 px-2 py-1 bg-orange-500 text-white rounded-full text-sm">8</span>
-          Cross-Platform Compatibility
-        </h2>
-        
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-            <h4 className={`font-bold mb-3 flex items-center ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🐧 Linux (Primary)
-            </h4>
-            <div className="space-y-3">
-              <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                <strong>Supported Distributions:</strong>
-                <ul className="mt-1 space-y-1 text-xs">
-                  <li>• Ubuntu 20.04+ LTS</li>
-                  <li>• Debian 11+</li>
-                  <li>• Fedora 35+</li>
-                  <li>• Arch Linux (experimental)</li>
-                </ul>
-              </div>
-              
-              <div className={`p-2 rounded text-xs font-mono ${
-                darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-              }`}>
-                # Linux-specific dependencies<br/>
-                sudo apt install portaudio19-dev<br/>
-                sudo apt install libxdo3 xdotool
-              </div>
-            </div>
-          </div>
-          
-          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-            <h4 className={`font-bold mb-3 flex items-center ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🪟 Windows
-            </h4>
-            <div className="space-y-3">
-              <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                <strong>Requirements:</strong>
-                <ul className="mt-1 space-y-1 text-xs">
-                  <li>• Windows 10 v1903+</li>
-                  <li>• WSL2 for Linux compatibility</li>
-                  <li>• Microsoft Visual C++ Redistributable</li>
-                  <li>• Windows Terminal (recommended)</li>
-                </ul>
-              </div>
-              
-              <div className={`p-2 rounded text-xs font-mono ${
-                darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-              }`}>
-                # PowerShell installation<br/>
-                winget install Python.Python.3.10<br/>
-                pip install pywin32 pycaw
-              </div>
-            </div>
-          </div>
-          
-          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-            <h4 className={`font-bold mb-3 flex items-center ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🍎 macOS
-            </h4>
-            <div className="space-y-3">
-              <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                <strong>Experimental Support:</strong>
-                <ul className="mt-1 space-y-1 text-xs">
-                  <li>• macOS Big Sur 11.0+</li>
-                  <li>• Homebrew package manager</li>
-                  <li>• Xcode Command Line Tools</li>
-                  <li>• Rosetta 2 (Apple Silicon)</li>
-                </ul>
-              </div>
-              
-              <div className={`p-2 rounded text-xs font-mono ${
-                darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-              }`}>
-                # Homebrew installation<br/>
-                brew install python@3.10<br/>
-                brew install portaudio
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div className={`mt-6 p-4 rounded-lg ${darkMode ? 'bg-blue-900 bg-opacity-20 border border-blue-800' : 'bg-blue-50 border border-blue-200'}`}>
-          <h4 className={`font-bold mb-2 ${darkMode ? 'text-blue-200' : 'text-blue-800'}`}>
-            🔄 Platform Abstraction Layer
-          </h4>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <h5 className={`text-sm font-semibold mb-1 ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
-                Audio System Abstraction
-              </h5>
-              <ul className={`text-xs space-y-1 ${darkMode ? 'text-blue-100' : 'text-blue-600'}`}>
-                <li>• ALSA (Linux) / DirectSound (Windows) / CoreAudio (macOS)</li>
-                <li>• Unified audio device enumeration and management</li>
-                <li>• Cross-platform audio format normalization</li>
-              </ul>
-            </div>
-            <div>
-              <h5 className={`text-sm font-semibold mb-1 ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
-                System Control Abstraction
-              </h5>
-              <ul className={`text-xs space-y-1 ${darkMode ? 'text-blue-100' : 'text-blue-600'}`}>
-                <li>• Unified keyboard/mouse event injection</li>
-                <li>• Process management and system monitoring</li>
-                <li>• File system operations and path handling</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Step 9: SentinelDB Implementation */}
-      <div className={`p-6 rounded-lg border ${
-        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      }`}>
-        <h2 className={`text-2xl font-bold mb-4 flex items-center ${
-          darkMode ? 'text-white' : 'text-gray-900'
-        }`}>
-          <span className="mr-3 px-2 py-1 bg-green-500 text-white rounded-full text-sm">9</span>
-          SentinelDB Database Intelligence
-        </h2>
-        
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🛡️ Core Database Engine
-            </h4>
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-green-300' : 'text-green-700'}`}>
-                  Database Setup
-                </h5>
-                <div className={`p-2 rounded text-xs font-mono ${
-                  darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-                }`}>
-                  pip install postgresql asyncpg sqlalchemy<br/>
-                  pip install chromadb sentence-transformers<br/>
-                  pip install prometheus-client fastapi
-                </div>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-green-300' : 'text-green-700'}`}>
-                  Schema Design
-                </h5>
-                <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• User profiles and preferences</li>
-                  <li>• Command history and patterns</li>
-                  <li>• AI model performance metrics</li>
-                  <li>• Security audit logs</li>
-                  <li>• System configuration snapshots</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              📊 Intelligence Features
-            </h4>
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>
-                  Query Optimization
-                </h5>
-                <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• Automatic index recommendations</li>
-                  <li>• Query execution plan analysis</li>
-                  <li>• Performance bottleneck detection</li>
-                  <li>• Statistical query optimization</li>
-                </ul>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>
-                  Security Monitoring
-                </h5>
-                <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• Anomaly detection in access patterns</li>
-                  <li>• SQL injection attempt detection</li>
-                  <li>• Privilege escalation monitoring</li>
-                  <li>• Real-time threat assessment</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Step 10: Codexa IDE Development */}
-      <div className={`p-6 rounded-lg border ${
-        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      }`}>
-        <h2 className={`text-2xl font-bold mb-4 flex items-center ${
-          darkMode ? 'text-white' : 'text-gray-900'
-        }`}>
-          <span className="mr-3 px-2 py-1 bg-purple-500 text-white rounded-full text-sm">10</span>
-          Codexa IDE Integration
-        </h2>
-        
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              💻 Electron Framework Setup
-            </h4>
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-indigo-300' : 'text-indigo-700'}`}>
-                  Project Initialization
-                </h5>
-                <div className={`p-2 rounded text-xs font-mono ${
-                  darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-                }`}>
-                  npm init -y<br/>
-                  npm install electron monaco-editor<br/>
-                  npm install electron-builder --save-dev
-                </div>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-indigo-300' : 'text-indigo-700'}`}>
-                  Core Components
-                </h5>
-                <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• Monaco Editor integration</li>
-                  <li>• File system access layer</li>
-                  <li>• Plugin architecture framework</li>
-                  <li>• Theme and customization system</li>
-                  <li>• Multi-window management</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🤖 AI Integration Points
-            </h4>
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
-                  CORTEX AI Integration
-                </h5>
-                <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• Real-time code suggestions</li>
-                  <li>• Contextual documentation lookup</li>
-                  <li>• Error detection and correction</li>
-                  <li>• Code refactoring recommendations</li>
-                </ul>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
-                  Language Server Protocol
-                </h5>
-                <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• Multi-language support framework</li>
-                  <li>• Syntax highlighting and validation</li>
-                  <li>• IntelliSense and autocomplete</li>
-                  <li>• Go-to-definition navigation</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Step 11: Ecosystem Integration */}
-      <div className={`p-6 rounded-lg border ${
-        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      }`}>
-        <h2 className={`text-2xl font-bold mb-4 flex items-center ${
-          darkMode ? 'text-white' : 'text-gray-900'
-        }`}>
-          <span className="mr-3 px-2 py-1 bg-red-500 text-white rounded-full text-sm">11</span>
-          Final Ecosystem Integration
+          <span className="mr-3">🛠️</span>
+          Free Technology Stack for Each Component
         </h2>
         
         <div className="space-y-6">
-          {/* Integration Architecture */}
-          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              🔗 Inter-Service Communication
-            </h4>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-cyan-300' : 'text-cyan-700'}`}>
-                  API Gateway Setup
-                </h5>
-                <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• RESTful API endpoints for all services</li>
-                  <li>• WebSocket connections for real-time features</li>
-                  <li>• GraphQL federation for complex queries</li>
-                  <li>• Rate limiting and authentication middleware</li>
-                </ul>
-              </div>
-              <div>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-cyan-300' : 'text-cyan-700'}`}>
-                  Message Queue System
-                </h5>
-                <ul className={`text-sm space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• Redis for lightweight message passing</li>
-                  <li>• RabbitMQ for complex workflow orchestration</li>
-                  <li>• Event-driven architecture patterns</li>
-                  <li>• Retry mechanisms and error handling</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          
-          {/* Configuration Management */}
-          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              ⚙️ Unified Configuration Management
-            </h4>
-            <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-yellow-300' : 'text-yellow-700'}`}>
-                  Environment Config
-                </h5>
-                <ul className={`text-xs space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• Development/Production profiles</li>
-                  <li>• Environment variable management</li>
-                  <li>• Secrets and credentials handling</li>
-                </ul>
-              </div>
-              <div>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-yellow-300' : 'text-yellow-700'}`}>
-                  User Preferences
-                </h5>
-                <ul className={`text-xs space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• Cross-service preference sync</li>
-                  <li>• Theme and UI customization</li>
-                  <li>• Hotkey and gesture mappings</li>
-                </ul>
-              </div>
-              <div>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-yellow-300' : 'text-yellow-700'}`}>
-                  System Monitoring
-                </h5>
-                <ul className={`text-xs space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <li>• Health check endpoints</li>
-                  <li>• Performance metrics collection</li>
-                  <li>• Automated alerting system</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          
-          {/* Deployment & Testing */}
-          <div className={`p-4 rounded-lg ${
-            darkMode ? 'bg-green-900 bg-opacity-20 border border-green-800' : 'bg-green-50 border border-green-200'
+          {/* CORTEX AI Technologies */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-blue-900 to-purple-900' : 'bg-gradient-to-r from-blue-50 to-purple-50'
           }`}>
-            <h4 className={`font-bold mb-3 ${darkMode ? 'text-green-200' : 'text-green-800'}`}>
-              🚀 Production Deployment Pipeline
-            </h4>
+            <h3 className={`text-xl font-bold mb-4 flex items-center ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              <span className="mr-3">🧠</span>
+              CORTEX AI - Free AI & ML Stack
+            </h3>
+            
             <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
-                  Containerization
-                </h5>
-                <div className={`p-2 rounded text-xs font-mono ${
-                  darkMode ? 'bg-gray-800 text-green-400' : 'bg-gray-200 text-gray-800'
-                }`}>
-                  # Docker Compose for full stack<br/>
-                  docker-compose up -d --build<br/><br/>
-                  # Individual service deployment<br/>
-                  docker build -t cortex-ai ./cortex-ai<br/>
-                  docker run -d --name cortex cortex-ai
-                </div>
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-blue-200' : 'text-blue-800'}`}>
+                  🤖 Local AI Models (100% Free)
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
+                  <li>• <strong>Ollama:</strong> Local LLM runner (LLaMA 3.1, Mistral, CodeLlama)</li>
+                  <li>• <strong>Whisper (OpenAI):</strong> Free speech-to-text via Hugging Face</li>
+                  <li>• <strong>Picovoice Porcupine:</strong> Free tier hotword detection</li>
+                  <li>• <strong>MediaPipe (Google):</strong> Free hand gesture recognition</li>
+                  <li>• <strong>Transformers.js:</strong> Browser-based AI inference</li>
+                </ul>
               </div>
-              <div>
-                <h5 className={`font-semibold text-sm mb-2 ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
-                  Integration Testing
-                </h5>
-                <ul className={`text-xs space-y-1 ${darkMode ? 'text-green-100' : 'text-green-600'}`}>
-                  <li>• End-to-end workflow testing</li>
-                  <li>• Load testing for concurrent users</li>
-                  <li>• Security penetration testing</li>
-                  <li>• Performance benchmarking</li>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                  💻 Backend Technologies
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                  <li>• <strong>Python 3.11+:</strong> Free, excellent AI/ML ecosystem</li>
+                  <li>• <strong>FastAPI:</strong> Modern, fast Python web framework</li>
+                  <li>• <strong>Uvicorn:</strong> Lightning-fast ASGI server</li>
+                  <li>• <strong>WebSockets:</strong> Real-time communication</li>
+                  <li>• <strong>Asyncio:</strong> Async programming for performance</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* SentinelDB Technologies */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-green-900 to-teal-900' : 'bg-gradient-to-r from-green-50 to-teal-50'
+          }`}>
+            <h3 className={`text-xl font-bold mb-4 flex items-center ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              <span className="mr-3">🛡️</span>
+              SentinelDB - Free Database & Storage Stack
+            </h3>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-green-200' : 'text-green-800'}`}>
+                  🗄️ Database Options (All Free)
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
+                  <li>• <strong>SQLite:</strong> Perfect for local-first architecture</li>
+                  <li>• <strong>PostgreSQL:</strong> Free, powerful relational database</li>
+                  <li>• <strong>ChromaDB:</strong> Free vector database for AI embeddings</li>
+                  <li>• <strong>Redis:</strong> Free in-memory caching and pub/sub</li>
+                  <li>• <strong>DuckDB:</strong> Fast analytical database for local analytics</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-teal-200' : 'text-teal-800'}`}>
+                  🔐 Security & ORM
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-teal-100' : 'text-teal-700'}`}>
+                  <li>• <strong>SQLAlchemy:</strong> Free Python ORM with async support</li>
+                  <li>• <strong>Alembic:</strong> Database migration tool</li>
+                  <li>• <strong>Cryptography:</strong> Python encryption library</li>
+                  <li>• <strong>Bcrypt:</strong> Password hashing</li>
+                  <li>• <strong>PyJWT:</strong> JSON Web Tokens for auth</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Cerebro Shell Technologies */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-purple-900 to-pink-900' : 'bg-gradient-to-r from-purple-50 to-pink-50'
+          }`}>
+            <h3 className={`text-xl font-bold mb-4 flex items-center ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              <span className="mr-3">💭</span>
+              Cerebro Shell - Free Terminal & UI Stack
+            </h3>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                  🖥️ Terminal Technologies
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                  <li>• <strong>Electron:</strong> Cross-platform desktop apps</li>
+                  <li>• <strong>Node.js:</strong> JavaScript runtime for backend</li>
+                  <li>• <strong>node-pty:</strong> Pseudo terminal for Node.js</li>
+                  <li>• <strong>xterm.js:</strong> Terminal emulator in browser</li>
+                  <li>• <strong>Socket.io:</strong> Real-time bidirectional communication</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-pink-200' : 'text-pink-800'}`}>
+                  🎨 UI Framework
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-pink-100' : 'text-pink-700'}`}>
+                  <li>• <strong>React 18:</strong> Modern UI library with hooks</li>
+                  <li>• <strong>Tailwind CSS:</strong> Utility-first CSS framework</li>
+                  <li>• <strong>Framer Motion:</strong> Smooth animations</li>
+                  <li>• <strong>React Router:</strong> Client-side routing</li>
+                  <li>• <strong>Zustand:</strong> Lightweight state management</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Codexa IDE Technologies */}
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-orange-900 to-red-900' : 'bg-gradient-to-r from-orange-50 to-red-50'
+          }`}>
+            <h3 className={`text-xl font-bold mb-4 flex items-center ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              <span className="mr-3">💻</span>
+              Codexa IDE - Free Code Editor Stack
+            </h3>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-orange-200' : 'text-orange-800'}`}>
+                  ✏️ Code Editor Core
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-orange-100' : 'text-orange-700'}`}>
+                  <li>• <strong>Monaco Editor:</strong> VS Code's editor engine (free)</li>
+                  <li>• <strong>Tree-sitter:</strong> Incremental parsing for syntax</li>
+                  <li>• <strong>Language Server Protocol:</strong> IntelliSense support</li>
+                  <li>• <strong>Prism.js:</strong> Syntax highlighting fallback</li>
+                  <li>• <strong>CodeMirror 6:</strong> Alternative editor option</li>
+                </ul>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-3 ${darkMode ? 'text-red-200' : 'text-red-800'}`}>
+                  🔧 Development Tools
+                </h4>
+                <ul className={`space-y-2 text-sm ${darkMode ? 'text-red-100' : 'text-red-700'}`}>
+                  <li>• <strong>Vite:</strong> Lightning-fast build tool</li>
+                  <li>• <strong>ESLint:</strong> JavaScript linting</li>
+                  <li>• <strong>Prettier:</strong> Code formatting</li>
+                  <li>• <strong>TypeScript:</strong> Type safety (optional)</li>
+                  <li>• <strong>Vitest:</strong> Unit testing framework</li>
                 </ul>
               </div>
             </div>
           </div>
         </div>
-        
-        <div className={`mt-6 p-4 rounded-lg ${
-          darkMode ? 'bg-purple-900 bg-opacity-20 border border-purple-800' : 'bg-purple-50 border border-purple-200'
+      </div>
+
+      {/* Development Environment Setup */}
+      <div className={`p-6 rounded-lg border ${
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+      }`}>
+        <h2 className={`text-2xl font-bold mb-6 flex items-center ${
+          darkMode ? 'text-white' : 'text-gray-900'
         }`}>
-          <h4 className={`font-bold mb-2 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
-            ✅ Phase 2 Completion Checklist
-          </h4>
-          <div className="grid md:grid-cols-2 gap-4">
-            <ul className={`text-sm space-y-1 ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
-              <li>□ Gesture control system operational</li>
-              <li>□ Cross-platform compatibility verified</li>
-              <li>□ SentinelDB intelligence features active</li>
-              <li>□ Codexa IDE basic functionality complete</li>
-            </ul>
-            <ul className={`text-sm space-y-1 ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
-              <li>□ All services integrated via API gateway</li>
-              <li>□ Configuration management centralized</li>
-              <li>□ Production deployment pipeline ready</li>
-              <li>□ Integration tests passing</li>
-            </ul>
+          <span className="mr-3">⚙️</span>
+          Free Development Environment Setup
+        </h2>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-blue-900 to-cyan-900' : 'bg-gradient-to-r from-blue-50 to-cyan-50'
+          }`}>
+            <h3 className={`text-lg font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              🛠️ Essential Free Tools
+            </h3>
+            
+            <div className="space-y-4">
+              <div className={`p-3 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-2 ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+                  Code Editors & IDEs
+                </h4>
+                <ul className={`text-sm space-y-1 ${darkMode ? 'text-cyan-100' : 'text-cyan-700'}`}>
+                  <li>• <strong>VS Code:</strong> Free, extensible, excellent Python/JS support</li>
+                  <li>• <strong>PyCharm Community:</strong> Free Python IDE</li>
+                  <li>• <strong>Vim/Neovim:</strong> Lightweight, powerful terminal editor</li>
+                </ul>
+              </div>
+              
+              <div className={`p-3 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-2 ${darkMode ? 'text-blue-200' : 'text-blue-800'}`}>
+                  Version Control & Collaboration
+                </h4>
+                <ul className={`text-sm space-y-1 ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
+                  <li>• <strong>Git:</strong> Free version control system</li>
+                  <li>• <strong>GitHub:</strong> Free public repositories</li>
+                  <li>• <strong>GitHub Codespaces:</strong> Free cloud development environment</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div className={`p-5 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-green-900 to-emerald-900' : 'bg-gradient-to-r from-green-50 to-emerald-50'
+          }`}>
+            <h3 className={`text-lg font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              📚 Free Learning Resources
+            </h3>
+            
+            <div className="space-y-4">
+              <div className={`p-3 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-2 ${darkMode ? 'text-emerald-200' : 'text-emerald-800'}`}>
+                  AI/ML Learning
+                </h4>
+                <ul className={`text-sm space-y-1 ${darkMode ? 'text-emerald-100' : 'text-emerald-700'}`}>
+                  <li>• <strong>Hugging Face Course:</strong> Free transformers course</li>
+                  <li>• <strong>Fast.ai:</strong> Practical deep learning</li>
+                  <li>• <strong>Coursera (Audit):</strong> Free access to course content</li>
+                </ul>
+              </div>
+              
+              <div className={`p-3 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-2 ${darkMode ? 'text-green-200' : 'text-green-800'}`}>
+                  Documentation & APIs
+                </h4>
+                <ul className={`text-sm space-y-1 ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
+                  <li>• <strong>MDN Web Docs:</strong> Free web development reference</li>
+                  <li>• <strong>Python.org:</strong> Official Python documentation</li>
+                  <li>• <strong>React.dev:</strong> Modern React documentation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Implementation Roadmap */}
+      <div className={`p-6 rounded-lg border ${
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+      }`}>
+        <h2 className={`text-2xl font-bold mb-6 flex items-center ${
+          darkMode ? 'text-white' : 'text-gray-900'
+        }`}>
+          <span className="mr-3">🗂️</span>
+          Student-Friendly Implementation Strategy
+        </h2>
+        
+        <div className="space-y-6">
+          <div className={`p-4 rounded-lg ${
+            darkMode ? 'bg-gradient-to-r from-purple-900 to-indigo-900' : 'bg-gradient-to-r from-purple-50 to-indigo-50'
+          }`}>
+            <h3 className={`text-lg font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              💡 Start Small, Scale Smart
+            </h3>
+            
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className={`p-3 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-2 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                  📚 Phase 1: Learn & Prototype
+                </h4>
+                <ul className={`text-sm space-y-1 ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                  <li>• Pick one component (start with CORTEX AI)</li>
+                  <li>• Build simple chat interface</li>
+                  <li>• Integrate local Ollama models</li>
+                  <li>• Add basic voice input with Whisper</li>
+                </ul>
+              </div>
+              
+              <div className={`p-3 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-2 ${darkMode ? 'text-indigo-200' : 'text-indigo-800'}`}>
+                  🔧 Phase 2: Build Core Features
+                </h4>
+                <ul className={`text-sm space-y-1 ${darkMode ? 'text-indigo-100' : 'text-indigo-700'}`}>
+                  <li>• Add SQLite database (SentinelDB core)</li>
+                  <li>• Create simple terminal interface</li>
+                  <li>• Connect components via WebSocket</li>
+                  <li>• Implement basic command delegation</li>
+                </ul>
+              </div>
+              
+              <div className={`p-3 rounded-lg ${
+                darkMode ? 'bg-black bg-opacity-20' : 'bg-white bg-opacity-60'
+              }`}>
+                <h4 className={`font-bold mb-2 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+                  🚀 Phase 3: Polish & Advanced Features
+                </h4>
+                <ul className={`text-sm space-y-1 ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                  <li>• Add gesture recognition</li>
+                  <li>• Implement code editor features</li>
+                  <li>• Add behavioral intelligence</li>
+                  <li>• Optimize performance</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div className={`p-4 rounded-lg ${
+            darkMode ? 'bg-yellow-900 bg-opacity-20 border border-yellow-800' : 'bg-yellow-50 border border-yellow-200'
+          }`}>
+            <h3 className={`font-bold mb-3 ${darkMode ? 'text-yellow-200' : 'text-yellow-800'}`}>
+              💰 Cost-Effective Development Tips for Students
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <h4 className={`font-bold text-sm mb-2 ${darkMode ? 'text-yellow-200' : 'text-yellow-800'}`}>
+                  💡 Smart Resource Management
+                </h4>
+                <ul className={`text-sm space-y-1 ${darkMode ? 'text-yellow-100' : 'text-yellow-700'}`}>
+                  <li>• Use GitHub Student Pack (free premium services)</li>
+                  <li>• Apply for Google Cloud credits ($300 free)</li>
+                  <li>• Use your .edu email for student discounts</li>
+                  <li>• Local development = no cloud costs</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h4 className={`font-bold text-sm mb-2 ${darkMode ? 'text-yellow-200' : 'text-yellow-800'}`}>
+                  🎯 Focus on Core Value
+                </h4>
+                <ul className={`text-sm space-y-1 ${darkMode ? 'text-yellow-100' : 'text-yellow-700'}`}>
+                  <li>• Build MVP first, optimize later</li>
+                  <li>• Use proven open-source solutions</li>
+                  <li>• Document everything for portfolio</li>
+                  <li>• Share progress on GitHub for visibility</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   )
+  
   const getTestingContent = () => (
     <div className="space-y-8">
       <div className={`p-6 rounded-lg border ${
@@ -4271,17 +4312,428 @@ const MainContent = ({ currentSection, darkMode }) => {
       </div>
     </div>
   )
+  
+  const getDiagramsContent = () => (
+    <div className="space-y-8">
+      <div className={`p-6 rounded-lg border ${
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+      }`}>
+        <h1 className={`text-3xl font-bold mb-6 ${
+          darkMode ? 'text-white' : 'text-gray-900'
+        }`}>
+          System Architecture Diagrams
+        </h1>
+        <p className={`text-lg mb-6 ${
+          darkMode ? 'text-gray-300' : 'text-gray-600'
+        }`}>
+          Visual representations of system architecture, data flow, and component interactions.
+        </p>
+      </div>
 
-  const renderContent = () => {
+      {/* High-Level Architecture Diagram */}
+      <div className={`p-6 rounded-lg border ${
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+      }`}>
+        <h2 className={`text-2xl font-bold mb-6 flex items-center ${
+          darkMode ? 'text-white' : 'text-gray-900'
+        }`}>
+          <span className="mr-3">🏗️</span>
+          High-Level System Architecture
+        </h2>
+        
+        <div className={`p-6 rounded-lg mb-6 ${
+          darkMode ? 'bg-gray-900 border border-gray-700' : 'bg-gray-50 border border-gray-200'
+        }`}>
+          <pre className={`text-sm overflow-x-auto ${darkMode ? 'text-green-400' : 'text-gray-800'}`}>
+{`
+                    ┌─────────────────────────────────────────┐
+                    │           CORTEX AI HUB                 │
+                    │    🧠 Central Command & Intelligence    │
+                    │                                         │
+                    │  ┌─────────┐ ┌─────────┐ ┌─────────┐   │
+                    │  │ Voice   │ │Gesture  │ │Keyboard │   │
+                    │  │ Input   │ │ Input   │ │ Input   │   │
+                    │  └─────────┘ └─────────┘ └─────────┘   │
+                    │         │         │         │         │
+                    │         └─────────┼─────────┘         │
+                    │                   │                   │
+                    │  ┌────────────────▼─────────────────┐  │
+                    │  │    Intent Classification &       │  │
+                    │  │      Task Delegation Engine      │  │
+                    │  └────────────────┬─────────────────┘  │
+                    └─────────────────────┼─────────────────────┘
+                                          │
+            ┌─────────────────────────────┼─────────────────────────────┐
+            │                             │                             │
+            ▼                             ▼                             ▼
+    ┌─────────────┐               ┌─────────────┐               ┌─────────────┐
+    │ SentinelDB  │               │ Cerebro     │               │ Codexa IDE  │
+    │ 🛡️ Data     │◄─────────────►│ Shell       │◄─────────────►│ 💻 Code     │
+    │ Guardian    │               │ 💭 Terminal │               │ Editor      │
+    │             │               │ Executor    │               │             │
+    │ • User Data │               │ • Commands  │               │ • Editing   │
+    │ • AI Models │               │ • Scripts   │               │ • Debugging │
+    │ • Configs   │               │ • Automation│               │ • Projects  │
+    │ • Patterns  │               │ • File Ops  │               │ • IntelliSense│
+    └─────────────┘               └─────────────┘               └─────────────┘
+            │                             │                             │
+            │                             │                             │
+            └─────────────────────────────┼─────────────────────────────┘
+                                          │
+                           ┌──────────────▼──────────────┐
+                           │      External Systems       │
+                           │                             │
+                           │ • User Application DBs      │
+                           │ • Git Repositories         │
+                           │ • Cloud Services           │
+                           │ • Package Managers         │
+                           └─────────────────────────────┘
+`}
+          </pre>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className={`p-4 rounded-lg ${
+            darkMode ? 'bg-blue-900 bg-opacity-20 border border-blue-800' : 'bg-blue-50 border border-blue-200'
+          }`}>
+            <h4 className={`font-bold mb-3 ${darkMode ? 'text-blue-200' : 'text-blue-800'}`}>
+              🎯 Key Architectural Principles
+            </h4>
+            <ul className={`space-y-2 text-sm ${darkMode ? 'text-blue-100' : 'text-blue-700'}`}>
+              <li>• <strong>Single Input Point:</strong> All user interaction flows through CORTEX AI</li>
+              <li>• <strong>Intelligent Delegation:</strong> CORTEX routes tasks to specialized components</li>
+              <li>• <strong>Event-Driven Coordination:</strong> Components communicate via events</li>
+              <li>• <strong>Local-First Design:</strong> All processing happens locally for privacy</li>
+            </ul>
+          </div>
+          
+          <div className={`p-4 rounded-lg ${
+            darkMode ? 'bg-green-900 bg-opacity-20 border border-green-800' : 'bg-green-50 border border-green-200'
+          }`}>
+            <h4 className={`font-bold mb-3 ${darkMode ? 'text-green-200' : 'text-green-800'}`}>
+              🔄 Data Flow Highlights
+            </h4>
+            <ul className={`space-y-2 text-sm ${darkMode ? 'text-green-100' : 'text-green-700'}`}>
+              <li>• <strong>Unified Input Processing:</strong> Voice/gesture/keyboard → CORTEX</li>
+              <li>• <strong>Smart Task Routing:</strong> CORTEX → appropriate component</li>
+              <li>• <strong>Cross-Component Learning:</strong> Shared behavioral patterns</li>
+              <li>• <strong>External Integration:</strong> Secure access to user's external systems</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Input Processing Flow */}
+      <div className={`p-6 rounded-lg border ${
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+      }`}>
+        <h2 className={`text-2xl font-bold mb-6 flex items-center ${
+          darkMode ? 'text-white' : 'text-gray-900'
+        }`}>
+          <span className="mr-3">🎤</span>
+          Input Processing & Command Flow
+        </h2>
+        
+        <div className={`p-6 rounded-lg mb-6 ${
+          darkMode ? 'bg-gray-900 border border-gray-700' : 'bg-gray-50 border border-gray-200'
+        }`}>
+          <pre className={`text-sm overflow-x-auto ${darkMode ? 'text-green-400' : 'text-gray-800'}`}>
+{`
+    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+    │   🗣️ Voice   │    │   👋 Gesture  │    │  ⌨️ Keyboard │
+    │   Input      │    │   Input      │    │   Input     │
+    └──────┬──────┘    └──────┬──────┘    └──────┬──────┘
+           │                  │                  │
+           │                  │                  │
+           └──────────────────┼──────────────────┘
+                              │
+                    ┌─────────▼─────────┐
+                    │  CORTEX AI CORE   │
+                    │                   │
+                    │  ┌─────────────┐  │
+                    │  │   Speech    │  │ ◄── Whisper STT
+                    │  │ Recognition │  │
+                    │  └─────────────┘  │
+                    │  ┌─────────────┐  │
+                    │  │  Gesture    │  │ ◄── MediaPipe
+                    │  │Recognition  │  │
+                    │  └─────────────┘  │
+                    │  ┌─────────────┐  │
+                    │  │   Intent    │  │ ◄── LLaMA 3
+                    │  │Classification│  │
+                    │  └─────────────┘  │
+                    └─────────┬─────────┘
+                              │
+              ┌───────────────┼───────────────┐
+              │               │               │
+              ▼               ▼               ▼
+    ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+    │   Database  │ │   Terminal  │ │ Code Editor │
+    │   Command   │ │   Command   │ │   Command   │
+    │             │ │             │ │             │
+    │"Store this  │ │"Run npm     │ │"Debug this  │
+    │ pattern"    │ │ install"    │ │ function"   │
+    └─────────────┘ └─────────────┘ └─────────────┘
+              │               │               │
+              ▼               ▼               ▼
+    ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+    │ SentinelDB  │ │ Cerebro     │ │ Codexa IDE  │
+    │ Executes    │ │ Shell       │ │ Executes    │
+    │ Database    │ │ Executes    │ │ Debugging   │
+    │ Operation   │ │ Command     │ │ Session     │
+    └─────────────┘ └─────────────┘ └─────────────┘
+`}
+          </pre>
+        </div>
+        
+        <div className={`p-4 rounded-lg ${
+          darkMode ? 'bg-purple-900 bg-opacity-20 border border-purple-800' : 'bg-purple-50 border border-purple-200'
+        }`}>
+          <h4 className={`font-bold mb-3 ${darkMode ? 'text-purple-200' : 'text-purple-800'}`}>
+            ⚡ Command Flow Examples
+          </h4>
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className={`text-sm ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+              <strong>Voice:</strong> "Open project folder"<br/>
+              <strong>→ CORTEX:</strong> Intent = file_navigation<br/>
+              <strong>→ Cerebro:</strong> Execute "cd /project"
+            </div>
+            <div className={`text-sm ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+              <strong>Gesture:</strong> Point + "Find usage"<br/>
+              <strong>→ CORTEX:</strong> Intent = code_search<br/>
+              <strong>→ Codexa:</strong> Highlight references
+            </div>
+            <div className={`text-sm ${darkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+              <strong>Text:</strong> "Optimize database"<br/>
+              <strong>→ CORTEX:</strong> Intent = optimization<br/>
+              <strong>→ SentinelDB:</strong> Run optimization
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Component Communication */}
+      <div className={`p-6 rounded-lg border ${
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+      }`}>
+        <h2 className={`text-2xl font-bold mb-6 flex items-center ${
+          darkMode ? 'text-white' : 'text-gray-900'
+        }`}>
+          <span className="mr-3">🔗</span>
+          Component Communication & Event Flow
+        </h2>
+        
+        <div className={`p-6 rounded-lg mb-6 ${
+          darkMode ? 'bg-gray-900 border border-gray-700' : 'bg-gray-50 border border-gray-200'
+        }`}>
+          <pre className={`text-sm overflow-x-auto ${darkMode ? 'text-green-400' : 'text-gray-800'}`}>
+{`
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                      EVENT BUS SYSTEM                           │
+    │                    (WebSocket + API)                           │
+    └──┬──────────────────────┬──────────────────────┬───────────────┘
+       │                      │                      │
+       │                      │                      │
+    ┌──▼──────────┐        ┌──▼──────────┐        ┌──▼──────────┐
+    │ SentinelDB  │        │ Cerebro     │        │ Codexa IDE  │
+    │             │        │ Shell       │        │             │
+    │ Events:     │        │             │        │ Events:     │
+    │ • db_query  │        │ Events:     │        │ • file_open │
+    │ • pattern   │        │ • cmd_exec  │        │ • code_edit │
+    │ • cleanup   │        │ • file_ops  │        │ • debug_start│
+    │ • backup    │        │ • git_ops   │        │ • intellisense│
+    └─────────────┘        └─────────────┘        └─────────────┘
+       │                      │                      │
+       │      ┌───────────────┼───────────────┐      │
+       │      │               │               │      │
+       │   ┌──▼──┐         ┌──▼──┐         ┌──▼──┐   │
+       │   │Time │         │File │         │System│   │
+       │   │Event│         │Watch│         │Event │   │
+       │   │     │         │     │         │Monitor│   │
+       │   └─────┘         └─────┘         └──────┘   │
+       │                                              │
+       └──────────────────┬───────────────────────────┘
+                          │
+                   ┌──────▼──────┐
+                   │ CORTEX AI   │
+                   │ Orchestration│
+                   │             │
+                   │ Coordinates: │
+                   │ • Multi-step │
+                   │   workflows  │
+                   │ • Event      │
+                   │   responses  │
+                   │ • System     │
+                   │   automation │
+                   └─────────────┘
+`}
+          </pre>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className={`p-4 rounded-lg ${
+            darkMode ? 'bg-orange-900 bg-opacity-20 border border-orange-800' : 'bg-orange-50 border border-orange-200'
+          }`}>
+            <h4 className={`font-bold mb-3 ${darkMode ? 'text-orange-200' : 'text-orange-800'}`}>
+              📡 Event Types & Triggers
+            </h4>
+            <ul className={`space-y-2 text-sm ${darkMode ? 'text-orange-100' : 'text-orange-700'}`}>
+              <li>• <strong>User Events:</strong> Voice commands, gestures, keyboard input</li>
+              <li>• <strong>System Events:</strong> File changes, time triggers, resource alerts</li>
+              <li>• <strong>Component Events:</strong> Task completion, error states, status updates</li>
+              <li>• <strong>Cross-Component:</strong> Data sharing, workflow coordination</li>
+            </ul>
+          </div>
+          
+          <div className={`p-4 rounded-lg ${
+            darkMode ? 'bg-cyan-900 bg-opacity-20 border border-cyan-800' : 'bg-cyan-50 border border-cyan-200'
+          }`}>
+            <h4 className={`font-bold mb-3 ${darkMode ? 'text-cyan-200' : 'text-cyan-800'}`}>
+              🔄 Real-Time Coordination
+            </h4>
+            <ul className={`space-y-2 text-sm ${darkMode ? 'text-cyan-100' : 'text-cyan-700'}`}>
+              <li>• <strong>WebSocket Channels:</strong> Low-latency component communication</li>
+              <li>• <strong>Event Queuing:</strong> Reliable message delivery and ordering</li>
+              <li>• <strong>State Synchronization:</strong> Consistent system state across components</li>
+              <li>• <strong>Graceful Degradation:</strong> System continues if one component fails</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Data Architecture */}
+      <div className={`p-6 rounded-lg border ${
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+      }`}>
+        <h2 className={`text-2xl font-bold mb-6 flex items-center ${
+          darkMode ? 'text-white' : 'text-gray-900'
+        }`}>
+          <span className="mr-3">🗄️</span>
+          Data Architecture & Storage Strategy
+        </h2>
+        
+        <div className={`p-6 rounded-lg mb-6 ${
+          darkMode ? 'bg-gray-900 border border-gray-700' : 'bg-gray-50 border border-gray-200'
+        }`}>
+          <pre className={`text-sm overflow-x-auto ${darkMode ? 'text-green-400' : 'text-gray-800'}`}>
+{`
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    SENTINELDB ARCHITECTURE                      │
+    │                     (Ecosystem Internal)                       │
+    └─────────────────────────┬───────────────────────────────────────┘
+                              │
+            ┌─────────────────┼─────────────────┐
+            │                 │                 │
+         ┌──▼──┐           ┌──▼──┐           ┌──▼──┐
+         │User │           │ AI  │           │System│
+         │Data │           │Model│           │ Meta │
+         │     │           │Data │           │Data  │
+         └─────┘           └─────┘           └──────┘
+            │                 │                 │
+    ┌───────▼───────┐ ┌───────▼───────┐ ┌───────▼───────┐
+    │• Preferences  │ │• Behavioral   │ │• Configurations│
+    │• Settings     │ │  Patterns     │ │• Project Meta │
+    │• Activity     │ │• Code Models  │ │• Cache Data   │
+    │  History      │ │• Learning     │ │• Log Files    │
+    │• Privacy Keys │ │  Weights      │ │• Performance  │
+    │  (Encrypted)  │ │• Embeddings   │ │  Metrics      │
+    └───────────────┘ └───────────────┘ └───────────────┘
+            │                 │                 │
+            └─────────────────┼─────────────────┘
+                              │
+                    ┌─────────▼─────────┐
+                    │    SQLite Core    │
+                    │   (Local File)    │
+                    │                   │
+                    │ ┌───────────────┐ │
+                    │ │  Encryption   │ │
+                    │ │    Layer      │ │
+                    │ │ (AES-256-GCM) │ │
+                    │ └───────────────┘ │
+                    └───────────────────┘
+
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                   EXTERNAL DATABASES                            │
+    │                  (User Applications)                           │
+    └─────────────────────────┬───────────────────────────────────────┘
+                              │
+              ┌───────────────┼───────────────┐
+              │               │               │
+           ┌──▼──┐         ┌──▼──┐         ┌──▼──┐
+           │PostgreSQL│     │MySQL│        │MongoDB│
+           │         │     │     │        │ NoSQL │
+           │• Production│   │• Legacy│     │• Modern│
+           │  Apps      │   │  Systems│    │  Apps  │
+           │• ACID      │   │• Web Apps│   │• Analytics│
+           │  Compliance│   │• CMSs    │   │• Real-time│
+           └────────────┘   └─────────┘    └────────┘
+                  │               │               │
+                  └───────────────┼───────────────┘
+                                  │
+                        ┌─────────▼─────────┐
+                        │ SentinelDB        │
+                        │ Connection        │
+                        │ Manager           │
+                        │                   │
+                        │• Query Router     │
+                        │• Performance      │
+                        │  Monitor          │
+                        │• Security Proxy   │
+                        └───────────────────┘
+`}
+          </pre>
+        </div>
+        
+        <div className={`p-4 rounded-lg ${
+          darkMode ? 'bg-red-900 bg-opacity-20 border border-red-800' : 'bg-red-50 border border-red-200'
+        }`}>
+          <h4 className={`font-bold mb-3 ${darkMode ? 'text-red-200' : 'text-red-800'}`}>
+            🔒 Privacy & Security Architecture
+          </h4>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <h5 className={`font-bold text-sm mb-2 ${darkMode ? 'text-red-200' : 'text-red-800'}`}>
+                Local-Only Data
+              </h5>
+              <ul className={`text-sm space-y-1 ${darkMode ? 'text-red-100' : 'text-red-700'}`}>
+                <li>• All personal data stays on user's machine</li>
+                <li>• Encrypted SQLite database</li>
+                <li>• User-controlled encryption keys</li>
+                <li>• Zero remote data transmission</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h5 className={`font-bold text-sm mb-2 ${darkMode ? 'text-red-200' : 'text-red-800'}`}>
+                External DB Access
+              </h5>
+              <ul className={`text-sm space-y-1 ${darkMode ? 'text-red-100' : 'text-red-700'}`}>
+                <li>• User-provided connection credentials</li>
+                <li>• Read-only access by default</li>
+                <li>• Encrypted credential storage</li>
+                <li>• Optional audit logging</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+    const renderContent = () => {
+    // Show search results if search is active
+    if (showSearch) {
+      return getSearchResults()
+    }
+    
     switch (currentSection) {
       case 'overview':
         return getOverviewContent()
       case 'architecture':
         return getArchitectureContent()
-      case 'implementation-1':
-        return getImplementation1Content()
-      case 'implementation-2':
-        return getImplementation2Content()
+      case 'implementation':
+        return getImplementationContent()
+      case 'diagrams':
+        return getDiagramsContent()
       case 'testing':
         return getTestingContent()
       case 'roadmap':
@@ -4291,9 +4743,23 @@ const MainContent = ({ currentSection, darkMode }) => {
     }
   }
 
+  // Listen for navigation events from search results
+  useEffect(() => {
+    const handleNavigation = (event) => {
+      const section = event.detail
+      // This would need to be passed up to parent component
+      if (window.setCurrentSection) {
+        window.setCurrentSection(section)
+      }
+    }
+    
+    window.addEventListener('navigateToSection', handleNavigation)
+    return () => window.removeEventListener('navigateToSection', handleNavigation)
+  }, [])
+
   return (
     <div className={`flex-1 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      <div className="max-w-6xl mx-auto p-8">
+      <div id="main-content" className="max-w-6xl mx-auto p-8">
         {renderContent()}
       </div>
     </div>
